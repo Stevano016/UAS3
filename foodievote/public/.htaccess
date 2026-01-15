@@ -1,0 +1,30 @@
+# File .htaccess untuk FoodieVote
+
+# Aktifkan mod_rewrite
+RewriteEngine On
+
+# Aturan untuk mencegah akses langsung ke direktori sensitif
+RewriteRule ^config/.*$ - [F,L]
+RewriteRule ^core/.*$ - [F,L]
+RewriteRule ^modules/.*$ - [F,L]
+
+# Redirect semua permintaan ke index.php di public/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Aturan keamanan tambahan
+<Files "database_schema.sql">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files ~ "^.*\.([Hh][Tt][Aa])">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Set header keamanan
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"

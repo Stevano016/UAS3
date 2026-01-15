@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Makanan - FoodieVote</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="../guest/index.php">FoodieVote</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../guest/index.php">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="restaurants.php">Restoran</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="foods.php">Makanan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../public/login.php">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <?php
+            require_once '../../modules/foods/food.model.php';
+            require_once '../../modules/ratings/rating.model.php';
+            
+            $foodModel = new FoodModel();
+            $ratingModel = new RatingModel();
+            
+            if (isset($_GET['id']) && !empty($_GET['id'])) {
+                $foodId = $_GET['id'];
+                $food = $foodModel->getFoodById($foodId);
+                
+                if ($food) {
+                    $avgRating = $food['avg_rating'] ? round($food['avg_rating'], 1) : 0;
+                    $totalRatings = $food['total_ratings'] ?? 0;
+                    $ratings = $ratingModel->getRatingsByFood($foodId);
+            ?>
+                    <div class="col-md-8">
+                        <h1><?php echo htmlspecialchars($food['name']); ?></h1>
+                        
+                        <?php if ($food['image_url']): ?>
+                            <img src="<?php echo $food['image_url']; ?>" class="img-fluid rounded mb-3" alt="<?php echo htmlspecialchars($food['name']); ?>" style="max-height: 400px; object-fit: cover;">
+                        <?php endif; ?>
+                        
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Deskripsi</h5>
+                                <p class="card-text"><?php echo htmlspecialchars($food['description']); ?></p>
+                                
+                                <h5 class="card-title">Informasi</h5>
+                                <p class="card-text">
+                                    <strong>Restoran:</strong> <a href="restaurant-detail.php?id=<?php echo $food['restaurant_id']; ?>"><?php echo htmlspecialchars($food['restaurant_name']); ?></a><br>
+                                    <strong>Harga:</strong> Rp <?php echo number_format($food['price'], 0, ',', '.'); ?>
+                                </p>
+                                
+                                <div class="mt-3">
+                                    <span class="fs-4 fw-bold text-warning"><?php echo $avgRating; ?> ★</span>
+                                    <span class="text-muted">(<?php echo $totalRatings; ?> rating)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3>Ulasan Pelanggan</h3>
+                        <?php if (!empty($ratings)): ?>
+                            <?php foreach ($ratings as $rating): ?>
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="card-subtitle mb-2 text-muted"><?php echo htmlspecialchars($rating['username']); ?></h6>
+                                            <small class="text-muted"><?php echo date('d M Y', strtotime($rating['created_at'])); ?></small>
+                                        </div>
+                                        <div class="mb-1">
+                                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                <span class="text-warning"><?php echo $i <= $rating['rating'] ? '★' : '☆'; ?></span>
+                                            <?php endfor; ?>
+                                        </div>
+                                        <p class="card-text"><?php echo htmlspecialchars($rating['review']); ?></p>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p>Belum ada ulasan untuk makanan ini.</p>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Info Restoran</h5>
+                            </div>
+                            <div class="card-body">
+                                <h6><?php echo htmlspecialchars($food['restaurant_name']); ?></h6>
+                                <p class="card-text">
+                                    <?php
+                                    require_once '../../modules/restaurants/restaurant.model.php';
+                                    $restaurantModel = new RestaurantModel();
+                                    $restaurant = $restaurantModel->getRestaurantById($food['restaurant_id']);
+                                    
+                                    if ($restaurant) {
+                                        $avgRestaurantRating = $restaurant['avg_rating'] ? round($restaurant['avg_rating'], 1) : 0;
+                                        $totalRestaurantRatings = $restaurant['total_ratings'] ?? 0;
+                                        
+                                        echo '<p class="mb-1">Alamat: ' . htmlspecialchars($restaurant['address']) . '</p>';
+                                        echo '<p class="mb-1">Telepon: ' . htmlspecialchars($restaurant['phone']) . '</p>';
+                                        echo '<div class="mt-2">';
+                                        echo '<span class="text-warning">' . $avgRestaurantRating . ' ★</span>';
+                                        echo '<small> (' . $totalRestaurantRatings . ' rating)</small>';
+                                        echo '</div>';
+                                        echo '<a href="restaurant-detail.php?id=' . $restaurant['id'] . '" class="btn btn-sm btn-outline-primary mt-2">Lihat Restoran</a>';
+                                    }
+                                    ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+            <?php
+                } else {
+                    echo '<div class="col-12"><p class="text-center">Makanan tidak ditemukan.</p></div>';
+                }
+            } else {
+                echo '<div class="col-12"><p class="text-center">ID makanan tidak valid.</p></div>';
+            }
+            ?>
+        </div>
+    </div>
+
+    <footer class="bg-light mt-5 py-4">
+        <div class="container text-center">
+            <p>&copy; 2023 FoodieVote. Semua hak dilindungi.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

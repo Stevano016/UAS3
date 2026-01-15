@@ -1,0 +1,76 @@
+/* File CSS dasar untuk FoodieVote */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.btn {
+    border-radius: 30px;
+}
+
+.rating-stars {
+    color: #ffc107;
+}
+
+.bg-primary {
+    background-color: #2c3e50 !important;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* Tabel */
+.table th {
+    border-top: none;
+    border-bottom-width: 2px;
+}
+
+/* Modal */
+.modal-content {
+    border-radius: 10px;
+    border: none;
+}
+
+/* Form */
+.form-control:focus {
+    border-color: #2c3e50;
+    box-shadow: 0 0 0 0.2rem rgba(44, 62, 80, 0.25);
+}
+
+/* Alert */
+.alert {
+    border-radius: 10px;
+}
+
+/* Badge */
+.badge {
+    border-radius: 10px;
+}
+
+/* Gambar */
+.img-fluid {
+    border-radius: 10px;
+}
+
+/* Footer */
+footer {
+    background-color: #f8f9fa;
+    padding: 20px 0;
+    margin-top: 40px;
+    color: #6c757d;
+}
