@@ -17,27 +17,99 @@ $restaurants = $restaurantModel->getAllRestaurants();
 $message = '';
 $messageType = '';
 
+// Ambil pesan dari session jika ada
+if (isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    $messageType = $_SESSION['messageType'];
+    unset($_SESSION['message']);
+    unset($_SESSION['messageType']);
+}
+
+// Fungsi untuk upload gambar
+function uploadImage($file) {
+    // Path absolut ke folder uploads
+    $uploadDir = __DIR__ . '/../../uploads/foods/';
+    
+    // Buat folder jika belum ada
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+    
+    $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    $maxSize = 5 * 1024 * 1024; // 5MB
+    
+    // Validasi file
+    if (!isset($file['error']) || is_array($file['error'])) {
+        return ['success' => false, 'message' => 'Error upload file'];
+    }
+    
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        return ['success' => false, 'message' => 'Error saat upload file'];
+    }
+    
+    if ($file['size'] > $maxSize) {
+        return ['success' => false, 'message' => 'Ukuran file terlalu besar (maksimal 5MB)'];
+    }
+    
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo->file($file['tmp_name']);
+    
+    if (!in_array($mimeType, $allowedTypes)) {
+        return ['success' => false, 'message' => 'Format file tidak didukung. Gunakan JPG, PNG, GIF, atau WEBP'];
+    }
+    
+    // Generate nama file unik
+    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $fileName = uniqid('food_', true) . '.' . $extension;
+    $filePath = $uploadDir . $fileName;
+    
+    // Pindahkan file
+    if (!move_uploaded_file($file['tmp_name'], $filePath)) {
+        return ['success' => false, 'message' => 'Gagal menyimpan file'];
+    }
+    
+    // Return path relatif untuk disimpan di database
+    return ['success' => true, 'path' => $filePath, 'url' => 'uploads/foods/' . $fileName];
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add_food'])) {
         $name = trim($_POST['name']);
         $description = trim($_POST['description']);
         $price = trim($_POST['price']);
         $restaurantId = $_POST['restaurant_id'];
-        $imageUrl = trim($_POST['image_url']);
+        $imageUrl = '';
+        
+        // Cek apakah ada file yang diupload
+        if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $uploadResult = uploadImage($_FILES['image_file']);
+            if ($uploadResult['success']) {
+                $imageUrl = $uploadResult['url'];
+            } else {
+                $message = $uploadResult['message'];
+                $messageType = 'danger';
+            }
+        } elseif (!empty($_POST['image_url'])) {
+            // Gunakan URL jika diisi
+            $imageUrl = trim($_POST['image_url']);
+        }
         
         // Validasi
         if (empty($name) || empty($description) || empty($price) || empty($restaurantId)) {
             $message = 'Semua field harus diisi';
             $messageType = 'danger';
-        } else {
+        } elseif (!isset($uploadResult) || $uploadResult['success']) {
             $result = $foodController->addFood($name, $description, $price, $restaurantId, $imageUrl);
-            $message = $result['message'];
-            $messageType = $result['success'] ? 'success' : 'danger';
             
-            // Refresh data jika berhasil
+            // Refresh data jika berhasil - gunakan session dan JS redirect
             if ($result['success']) {
-                header('Location: index.php?page=manage-foods&message=' . urlencode($message) . '&messageType=' . urlencode($messageType));
+                $_SESSION['message'] = $result['message'];
+                $_SESSION['messageType'] = 'success';
+                echo "<script>window.location.href = 'index.php?page=manage-foods';</script>";
                 exit();
+            } else {
+                $message = $result['message'];
+                $messageType = 'danger';
             }
         }
     } elseif (isset($_POST['update_food'])) {
@@ -46,37 +118,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $description = trim($_POST['description']);
         $price = trim($_POST['price']);
         $restaurantId = $_POST['restaurant_id'];
-        $imageUrl = trim($_POST['image_url']);
+        $imageUrl = trim($_POST['current_image_url']); // Gunakan gambar lama sebagai default
+        
+        // Cek apakah ada file yang diupload
+        if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $uploadResult = uploadImage($_FILES['image_file']);
+            if ($uploadResult['success']) {
+                // Hapus gambar lama jika ada dan bukan URL eksternal
+                if (!empty($imageUrl) && strpos($imageUrl, 'http') === false) {
+                    $oldImagePath = __DIR__ . '/../../' . $imageUrl;
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                }
+                $imageUrl = $uploadResult['url'];
+            } else {
+                $message = $uploadResult['message'];
+                $messageType = 'danger';
+            }
+        } elseif (!empty($_POST['image_url'])) {
+            // Gunakan URL baru jika diisi
+            $imageUrl = trim($_POST['image_url']);
+        }
         
         // Validasi
         if (empty($id) || empty($name) || empty($description) || empty($price) || empty($restaurantId)) {
             $message = 'Semua field harus diisi';
             $messageType = 'danger';
-        } else {
+        } elseif (!isset($uploadResult) || $uploadResult['success']) {
             $result = $foodController->updateFood($id, $name, $description, $price, $restaurantId, $imageUrl);
-            $message = $result['message'];
-            $messageType = $result['success'] ? 'success' : 'danger';
             
-            // Refresh data jika berhasil
+            // Refresh data jika berhasil - gunakan session dan JS redirect
             if ($result['success']) {
-                header('Location: index.php?page=manage-foods&message=' . urlencode($message) . '&messageType=' . urlencode($messageType));
+                $_SESSION['message'] = $result['message'];
+                $_SESSION['messageType'] = 'success';
+                echo "<script>window.location.href = 'index.php?page=manage-foods';</script>";
                 exit();
+            } else {
+                $message = $result['message'];
+                $messageType = 'danger';
             }
         }
     } elseif (isset($_POST['delete_food'])) {
         $id = $_POST['food_id'];
         
-        $result = $foodController->deleteFood($id);
-        $message = $result['message'];
-        $messageType = $result['success'] ? 'success' : 'danger';
+        // Ambil data makanan untuk hapus gambar
+        $food = $foodModel->getFoodById($id);
         
-        // Refresh data jika berhasil
+        $result = $foodController->deleteFood($id);
+        
+        // Hapus file gambar jika berhasil delete dan bukan URL eksternal
+        if ($result['success'] && !empty($food['image_url']) && strpos($food['image_url'], 'http') === false) {
+            $imagePath = __DIR__ . '/../../' . $food['image_url'];
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+        
+        // Refresh data jika berhasil - gunakan session dan JS redirect
         if ($result['success']) {
-            header('Location: index.php?page=manage-foods&message=' . urlencode($message) . '&messageType=' . urlencode($messageType));
+            $_SESSION['message'] = $result['message'];
+            $_SESSION['messageType'] = 'success';
+            echo "<script>window.location.href = 'index.php?page=manage-foods';</script>";
             exit();
+        } else {
+            $message = $result['message'];
+            $messageType = 'danger';
         }
     }
 }
+
+// Refresh data setelah operasi
+$foods = $foodModel->getAllFoods();
 ?>
 
 <div class="dashboard-header">
@@ -96,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h5>Tambah Makanan Baru</h5>
     </div>
     <div class="card-body">
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="name" class="form-label">Nama Makanan</label>
@@ -114,19 +227,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="restaurant_id" class="form-label">Restoran</label>
-                    <?php $selectedRestaurant = $food['restaurant_id'] ?? null; ?>
                     <select class="form-select" id="restaurant_id" name="restaurant_id" required>
+                        <option value="">Pilih Restoran</option>
                         <?php foreach ($restaurants as $restaurant): ?>
-                            <option value="<?= $restaurant['id']; ?>"
-                                <?= $restaurant['id'] == $selectedRestaurant ? 'selected' : ''; ?>>
+                            <option value="<?= $restaurant['id']; ?>">
                                 <?= htmlspecialchars($restaurant['name']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="image_url" class="form-label">URL Gambar</label>
-                    <input type="text" class="form-control" id="image_url" name="image_url">
+                    <label for="image_file" class="form-label">Upload Gambar</label>
+                    <input type="file" class="form-control" id="image_file" name="image_file" accept="image/*" onchange="previewImage(this, 'preview_add')">
+                    <small class="text-muted">Maksimal 5MB (JPG, PNG, GIF, WEBP)</small>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="image_url" class="form-label">Atau Masukkan URL Gambar</label>
+                <input type="text" class="form-control" id="image_url" name="image_url" placeholder="https://example.com/image.jpg">
+            </div>
+            <div class="mb-3" id="preview_add" style="display: none;">
+                <label class="form-label">Preview Gambar</label>
+                <div>
+                    <img id="preview_add_img" src="" alt="Preview" style="max-width: 300px; max-height: 300px; border-radius: 8px;">
                 </div>
             </div>
             <button type="submit" name="add_food" class="btn btn-primary pulse-animation">Tambah Makanan</button>
@@ -146,6 +269,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Gambar</th>
                         <th>Nama</th>
                         <th>Restoran</th>
                         <th>Harga</th>
@@ -157,6 +281,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php foreach ($foods as $food): ?>
                         <tr>
                             <td><?php echo $food['id']; ?></td>
+                            <td>
+                                <?php if (!empty($food['image_url'])): ?>
+                                    <?php 
+                                    // Cek apakah URL eksternal atau lokal
+                                    $imageSrc = (strpos($food['image_url'], 'http') === 0) 
+                                        ? htmlspecialchars($food['image_url']) 
+                                        : '../' . htmlspecialchars($food['image_url']); 
+                                    ?>
+                                    <img src="<?php echo $imageSrc; ?>" 
+                                         alt="<?php echo htmlspecialchars($food['name']); ?>" 
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;"
+                                         onerror="this.parentElement.innerHTML='<div style=\'width: 50px; height: 50px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;\'>🍽️</div>'">
+                                <?php else: ?>
+                                    <div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;">🍽️</div>
+                                <?php endif; ?>
+                            </td>
                             <td><?php echo htmlspecialchars($food['name']); ?></td>
                             <td><?php echo htmlspecialchars($food['restaurant_name']); ?></td>
                             <td>Rp <?php echo number_format($food['price'], 0, ',', '.'); ?></td>
@@ -197,7 +337,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 
-<!-- Modal Edit - Dipindahkan keluar dari tabel -->
+<!-- Modal Edit -->
 <?php foreach ($foods as $food): ?>
     <div class="modal fade" id="editModal<?php echo $food['id']; ?>" tabindex="-1">
         <div class="modal-dialog">
@@ -206,9 +346,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <h5 class="modal-title">Edit Makanan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <input type="hidden" name="food_id" value="<?php echo $food['id']; ?>">
+                        <input type="hidden" name="current_image_url" value="<?php echo htmlspecialchars($food['image_url']); ?>">
                         <div class="mb-3">
                             <label for="edit_name_<?php echo $food['id']; ?>" class="form-label">Nama Makanan</label>
                             <input type="text" class="form-control" id="edit_name_<?php echo $food['id']; ?>" name="name" value="<?php echo htmlspecialchars($food['name']); ?>" required>
@@ -231,9 +372,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <?php endforeach; ?>
                             </select>
                         </div>
+                        
+                        <?php if (!empty($food['image_url'])): ?>
                         <div class="mb-3">
-                            <label for="edit_image_url_<?php echo $food['id']; ?>" class="form-label">URL Gambar</label>
-                            <input type="text" class="form-control" id="edit_image_url_<?php echo $food['id']; ?>" name="image_url" value="<?php echo htmlspecialchars($food['image_url']); ?>">
+                            <label class="form-label">Gambar Saat Ini</label>
+                            <div>
+                                <?php 
+                                $imageSrc = (strpos($food['image_url'], 'http') === 0) 
+                                    ? htmlspecialchars($food['image_url']) 
+                                    : '../' . htmlspecialchars($food['image_url']); 
+                                ?>
+                                <img src="<?php echo $imageSrc; ?>" alt="Current" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <div class="mb-3">
+                            <label for="edit_image_file_<?php echo $food['id']; ?>" class="form-label">Upload Gambar Baru</label>
+                            <input type="file" class="form-control" id="edit_image_file_<?php echo $food['id']; ?>" name="image_file" accept="image/*" onchange="previewImage(this, 'preview_edit_<?php echo $food['id']; ?>')">
+                            <small class="text-muted">Maksimal 5MB (JPG, PNG, GIF, WEBP)</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_image_url_<?php echo $food['id']; ?>" class="form-label">Atau Masukkan URL Gambar Baru</label>
+                            <input type="text" class="form-control" id="edit_image_url_<?php echo $food['id']; ?>" name="image_url" placeholder="https://example.com/image.jpg">
+                        </div>
+                        <div class="mb-3" id="preview_edit_<?php echo $food['id']; ?>" style="display: none;">
+                            <label class="form-label">Preview Gambar Baru</label>
+                            <div>
+                                <img id="preview_edit_<?php echo $food['id']; ?>_img" src="" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -245,3 +412,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 <?php endforeach; ?>
+
+
