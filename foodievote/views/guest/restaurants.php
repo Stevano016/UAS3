@@ -13,6 +13,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
 
 <!-- Form pencarian -->
 <form class="mb-4" method="GET">
+    <input type="hidden" name="page" value="restaurants">
     <div class="input-group">
         <input type="text" class="form-control" placeholder="Cari restoran..." name="search" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
         <button class="btn btn-outline-secondary" type="submit">Cari</button>
