@@ -5,28 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Restoran - FoodieVote</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="../guest/index.php">FoodieVote</a>
+            <a class="navbar-brand" href="index.php">FoodieVote</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="../guest/index.php">Home</a>
+                        <a class="nav-link" href="index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="restaurants.php">Restoran</a>
+                        <a class="nav-link active" href="index.php?page=restaurants">Restoran</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="foods.php">Makanan</a>
+                        <a class="nav-link" href="index.php?page=foods">Makanan</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../public/login.php">Login</a>
+                        <a class="nav-link" href="login.php">Login</a>
                     </li>
                 </ul>
             </div>
@@ -49,8 +49,7 @@
                 <!-- Daftar restoran -->
                 <div class="row">
                     <?php
-                    require_once '../../modules/restaurants/restaurant.model.php';
-                    
+                        require_once '../modules/restaurants/restaurant.model.php';                    
                     $restaurantModel = new RestaurantModel();
                     
                     if (isset($_GET['search']) && !empty($_GET['search'])) {
@@ -80,7 +79,7 @@
                         echo '<span class="badge bg-warning text-dark">' . $avgRating . ' ★</span>';
                         echo '<small>(' . $totalRatings . ' rating)</small>';
                         echo '</div>';
-                        echo '<a href="restaurant-detail.php?id=' . $restaurant['id'] . '" class="btn btn-primary">Lihat Detail</a>';
+                        echo '<a href="index.php?page=restaurant-detail&id=' . $restaurant['id'] . '" class="btn btn-primary">Lihat Detail</a>';
                         echo '</div>';
                         echo '</div>';
                         echo '</div>';

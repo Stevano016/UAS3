@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard User - FoodieVote</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
 </head>
 <body>
     <?php
@@ -33,21 +33,21 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php">Home</a>
+                        <a class="nav-link" href="index.php?page=home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../guest/restaurants.php">Restoran</a>
+                        <a class="nav-link" href="index.php?page=restaurants">Restoran</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../guest/foods.php">Makanan</a>
+                        <a class="nav-link" href="index.php?page=foods">Makanan</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
                             Halo, <?php echo htmlspecialchars($user['username']); ?>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="profile.php">Profil Saya</a></li>
-                            <li><a class="dropdown-item" href="my-ratings.php">Rating Saya</a></li>
+                            <li><a class="dropdown-item" href="index.php?page=profile">Profil Saya</a></li>
+                            <li><a class="dropdown-item" href="index.php?page=my-ratings">Rating Saya</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                         </ul>
@@ -69,7 +69,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Profil Saya</h5>
                                 <p class="card-text">Lihat dan kelola informasi akun Anda</p>
-                                <a href="profile.php" class="btn btn-light">Lihat Profil</a>
+                                <a href="index.php?page=profile" class="btn btn-light">Lihat Profil</a>
                             </div>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Rating Saya</h5>
                                 <p class="card-text">Lihat semua rating dan ulasan yang telah Anda berikan</p>
-                                <a href="my-ratings.php" class="btn btn-light">Lihat Rating</a>
+                                <a href="index.php?page=my-ratings" class="btn btn-light">Lihat Rating</a>
                             </div>
                         </div>
                     </div>
@@ -87,7 +87,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Berikan Rating</h5>
                                 <p class="card-text">Berikan penilaian untuk restoran atau makanan yang pernah Anda coba</p>
-                                <a href="../../guest/restaurants.php" class="btn btn-light">Cari Item untuk Dirating</a>
+                                <a href="index.php?page=restaurants" class="btn btn-light">Cari Item untuk Dirating</a>
                             </div>
                         </div>
                     </div>

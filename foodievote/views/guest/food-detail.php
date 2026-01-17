@@ -5,28 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Makanan - FoodieVote</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="../guest/index.php">FoodieVote</a>
+            <a class="navbar-brand" href="index.php">FoodieVote</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="../guest/index.php">Home</a>
+                        <a class="nav-link" href="index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="restaurants.php">Restoran</a>
+                        <a class="nav-link" href="index.php?page=restaurants">Restoran</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="foods.php">Makanan</a>
+                        <a class="nav-link active" href="index.php?page=foods">Makanan</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../public/login.php">Login</a>
+                        <a class="nav-link" href="login.php">Login</a>
                     </li>
                 </ul>
             </div>
@@ -36,12 +36,18 @@
     <div class="container mt-5">
         <div class="row">
             <?php
-            require_once '../../modules/foods/food.model.php';
-            require_once '../../modules/ratings/rating.model.php';
+            require_once '../modules/foods/food.model.php';
+            require_once '../modules/ratings/rating.model.php';
+            require_once '../modules/ratings/rating.controller.php'; // Added this line
             
             $foodModel = new FoodModel();
             $ratingModel = new RatingModel();
+            $ratingController = new RatingController(); // Initialize controller
             
+            // Initialize message variables
+            $message = '';
+            $messageType = '';
+
             if (isset($_GET['id']) && !empty($_GET['id'])) {
                 $foodId = $_GET['id'];
                 $food = $foodModel->getFoodById($foodId);
@@ -49,7 +55,29 @@
                 if ($food) {
                     $avgRating = $food['avg_rating'] ? round($food['avg_rating'], 1) : 0;
                     $totalRatings = $food['total_ratings'] ?? 0;
-                    $ratings = $ratingModel->getRatingsByFood($foodId);
+                    
+                    // --- Handle Rating Submission ---
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_food_rating'])) {
+                        if (isLoggedIn() && isUser()) { // Ensure only logged-in users can submit
+                            $userId = getSession('user_id');
+                            $ratingValue = $_POST['rating_value'];
+                            $reviewText = trim($_POST['review_text']);
+
+                            $result = $ratingController->addOrUpdateRating($userId, $foodId, true, $ratingValue, $reviewText); // true for food item
+                            $message = $result['message'];
+                            $messageType = $result['success'] ? 'success' : 'danger';
+                            
+                            // Refresh ratings after submission
+                            $ratings = $ratingModel->getRatingsByFood($foodId);
+                        } else {
+                            $message = "Anda harus login sebagai user untuk memberikan rating.";
+                            $messageType = "danger";
+                        }
+                    } else {
+                        // Load initial ratings if not a rating submission
+                        $ratings = $ratingModel->getRatingsByFood($foodId);
+                    }
+                    // --- End Handle Rating Submission ---
             ?>
                     <div class="col-md-8">
                         <h1><?php echo htmlspecialchars($food['name']); ?></h1>
@@ -65,7 +93,7 @@
                                 
                                 <h5 class="card-title">Informasi</h5>
                                 <p class="card-text">
-                                    <strong>Restoran:</strong> <a href="restaurant-detail.php?id=<?php echo $food['restaurant_id']; ?>"><?php echo htmlspecialchars($food['restaurant_name']); ?></a><br>
+                                    <strong>Restoran:</strong> <a href="index.php?page=restaurant-detail&id=<?php echo $food['restaurant_id']; ?>"><?php echo htmlspecialchars($food['restaurant_name']); ?></a><br>
                                     <strong>Harga:</strong> Rp <?php echo number_format($food['price'], 0, ',', '.'); ?>
                                 </p>
                                 
@@ -75,7 +103,47 @@
                                 </div>
                             </div>
                         </div>
+
+                        <?php if ($message): // Display messages here ?>
+                            <div class="alert alert-<?php echo $messageType; ?> alert-dismissible fade show" role="alert">
+                                <?php echo htmlspecialchars($message); ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        <?php endif; ?>
                         
+                        <?php if (isLoggedIn() && isUser()): // Show form only if logged in as user ?>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Berikan Rating dan Ulasan Anda</h5>
+                            </div>
+                            <div class="card-body">
+                                <form method="POST">
+                                    <input type="hidden" name="food_id" value="<?php echo $foodId; ?>">
+                                    <div class="mb-3">
+                                        <label for="rating_value" class="form-label">Rating</label>
+                                        <select class="form-select" id="rating_value" name="rating_value" required>
+                                            <option value="">Pilih Rating</option>
+                                            <option value="1">1 Bintang</option>
+                                            <option value="2">2 Bintang</option>
+                                            <option value="3">3 Bintang</option>
+                                            <option value="4">4 Bintang</option>
+                                            <option value="5">5 Bintang</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="review_text" class="form-label">Ulasan Anda</label>
+                                        <textarea class="form-control" id="review_text" name="review_text" rows="3"></textarea>
+                                    </div>
+                                    <button type="submit" name="submit_food_rating" class="btn btn-primary">Kirim Rating</button>
+                                </form>
+                            </div>
+                        </div>
+                        <?php elseif (isLoggedIn() && isAdmin()): // Admin can't rate ?>
+                            <div class="alert alert-info">Admin tidak dapat memberikan rating.</div>
+                        <?php else: // Not logged in ?>
+                            <div class="alert alert-info">Silakan <a href="login.php">login</a> untuk memberikan rating.</div>
+                        <?php endif; ?>
+
                         <h3>Ulasan Pelanggan</h3>
                         <?php if (!empty($ratings)): ?>
                             <?php foreach ($ratings as $rating): ?>
@@ -108,7 +176,7 @@
                                 <h6><?php echo htmlspecialchars($food['restaurant_name']); ?></h6>
                                 <p class="card-text">
                                     <?php
-                                    require_once '../../modules/restaurants/restaurant.model.php';
+                                    require_once '../modules/restaurants/restaurant.model.php';
                                     $restaurantModel = new RestaurantModel();
                                     $restaurant = $restaurantModel->getRestaurantById($food['restaurant_id']);
                                     
@@ -122,7 +190,7 @@
                                         echo '<span class="text-warning">' . $avgRestaurantRating . ' ★</span>';
                                         echo '<small> (' . $totalRestaurantRatings . ' rating)</small>';
                                         echo '</div>';
-                                        echo '<a href="restaurant-detail.php?id=' . $restaurant['id'] . '" class="btn btn-sm btn-outline-primary mt-2">Lihat Restoran</a>';
+                                        echo '<a href="index.php?page=restaurant-detail&id=' . $restaurant['id'] . '" class="btn btn-sm btn-outline-primary mt-2">Lihat Restoran</a>';
                                     }
                                     ?>
                                 </p>

@@ -38,14 +38,56 @@ if (isLoggedIn()) {
         }
     } else {
         // --- User Routing ---
-        // Saat ini, user biasa selalu diarahkan ke dashboard mereka.
-        // Bisa diperluas dengan logika 'page' jika diperlukan.
-        $pageToLoad = '../views/user/dashboard.php';
+        $userViewPath = '../views/user/';
+        $guestViewPath = '../views/guest/';
+        switch ($page) {
+            case 'home':
+                $pageToLoad = $userViewPath . 'dashboard.php';
+                break;
+            case 'profile':
+                $pageToLoad = $userViewPath . 'profile.php';
+                break;
+            case 'my-ratings':
+                $pageToLoad = $userViewPath . 'my-ratings.php';
+                break;
+            case 'restaurants':
+                $pageToLoad = $guestViewPath . 'restaurants.php';
+                break;
+            case 'foods':
+                $pageToLoad = $guestViewPath . 'foods.php';
+                break;
+            case 'restaurant-detail':
+                $pageToLoad = $guestViewPath . 'restaurant-detail.php';
+                break;
+            case 'food-detail':
+                $pageToLoad = $guestViewPath . 'food-detail.php';
+                break;
+            default:
+                $pageToLoad = $userViewPath . 'dashboard.php'; // Fallback ke dashboard user
+        }
     }
 } else {
     // --- Guest Routing ---
-    // Arahkan ke halaman guest index. Bisa diperluas juga.
-    $pageToLoad = '../views/guest/index.php';
+    $guestViewPath = '../views/guest/';
+    switch ($page) {
+        case 'home':
+            $pageToLoad = $guestViewPath . 'index.php';
+            break;
+        case 'restaurants':
+            $pageToLoad = $guestViewPath . 'restaurants.php';
+            break;
+        case 'foods':
+            $pageToLoad = $guestViewPath . 'foods.php';
+            break;
+        case 'restaurant-detail':
+            $pageToLoad = $guestViewPath . 'restaurant-detail.php';
+            break;
+        case 'food-detail':
+            $pageToLoad = $guestViewPath . 'food-detail.php';
+            break;
+        default:
+            $pageToLoad = $guestViewPath . 'index.php'; // Fallback ke guest home
+    }
 }
 
 // Sertakan file yang sesuai

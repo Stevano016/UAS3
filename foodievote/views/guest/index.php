@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodieVote - Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -20,10 +20,10 @@
                         <a class="nav-link" href="index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="restaurants.php">Restoran</a>
+                        <a class="nav-link" href="index.php?page=restaurants">Restoran</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="foods.php">Makanan</a>
+                        <a class="nav-link" href="index.php?page=foods">Makanan</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="login.php">Login</a>
@@ -45,7 +45,7 @@
                             <div class="card-body text-center">
                                 <h5 class="card-title">Temukan Restoran Terbaik</h5>
                                 <p class="card-text">Jelajahi berbagai restoran dengan rating dan ulasan dari pengguna lain</p>
-                                <a href="restaurants.php" class="btn btn-primary">Lihat Restoran</a>
+                                <a href="index.php?page=restaurants" class="btn btn-primary">Lihat Restoran</a>
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                             <div class="card-body text-center">
                                 <h5 class="card-title">Temukan Makanan Favorit</h5>
                                 <p class="card-text">Temukan makanan lezat dengan rating dan ulasan dari pengguna lain</p>
-                                <a href="foods.php" class="btn btn-primary">Lihat Makanan</a>
+                                <a href="index.php?page=foods" class="btn btn-primary">Lihat Makanan</a>
                             </div>
                         </div>
                     </div>

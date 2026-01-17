@@ -4,11 +4,7 @@ require_once '../modules/users/user.controller.php';
 
 // Cek apakah user sudah login
 if (isLoggedIn()) {
-    if (isAdmin()) {
-        redirect('../views/admin/dashboard.php');
-    } else {
-        redirect('../views/user/dashboard.php');
-    }
+    redirect('/');
 }
 
 $userController = new UserController();
@@ -39,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - FoodieVote</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
 </head>
 <body>
     <div class="container mt-5">
@@ -78,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </form>
                         
                         <div class="text-center mt-3">
-                            <p>Sudah punya akun? <a href="login.php">Login di sini</a></p>
+                            <p>Sudah punya akun? <a href="<?php echo BASE_URL; ?>/public/login.php">Login di sini</a></p>
                         </div>
                     </div>
                 </div>

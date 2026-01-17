@@ -108,6 +108,36 @@ class RatingController {
             ];
         }
     }
+
+    // Fungsi untuk menambah atau memperbarui rating
+    public function addOrUpdateRating($userId, $itemId, $isFoodItem, $rating, $review) {
+        // Validasi input
+        if (empty($userId) || empty($itemId) || empty($rating)) {
+            return [
+                'success' => false,
+                'message' => 'User ID, Item ID, dan Rating harus diisi'
+            ];
+        }
+        
+        if ($rating < 1 || $rating > 5) {
+            return [
+                'success' => false,
+                'message' => 'Rating harus antara 1 dan 5'
+            ];
+        }
+
+        if ($this->ratingModel->addOrUpdateRating($userId, $itemId, $isFoodItem, $rating, $review)) {
+            return [
+                'success' => true,
+                'message' => 'Rating berhasil disimpan'
+            ];
+        } else {
+            return [
+                'success' => false,
+                'message' => 'Gagal menyimpan rating'
+            ];
+        }
+    }
     
     // Fungsi untuk mendapatkan rata-rata rating untuk restoran
     public function getAverageRatingForRestaurant($restaurantId) {

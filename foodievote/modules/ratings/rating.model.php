@@ -132,6 +132,25 @@ class RatingModel {
         
         return $stmt->execute();
     }
+
+    // Menambah atau memperbarui rating dalam satu query
+    public function addOrUpdateRating($userId, $itemId, $isFoodItem, $rating, $review) {
+        $restaurantId = $isFoodItem ? null : $itemId;
+        $foodId = $isFoodItem ? $itemId : null;
+
+        $sql = "INSERT INTO ratings (user_id, restaurant_id, food_id, rating, review) 
+                VALUES (:user_id, :restaurant_id, :food_id, :rating, :review)
+                ON DUPLICATE KEY UPDATE rating = VALUES(rating), review = VALUES(review)";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':restaurant_id', $restaurantId, PDO::PARAM_INT);
+        $stmt->bindParam(':food_id', $foodId, PDO::PARAM_INT);
+        $stmt->bindParam(':rating', $rating, PDO::PARAM_INT);
+        $stmt->bindParam(':review', $review, PDO::PARAM_STR);
+        
+        return $stmt->execute();
+    }
     
     // Mendapatkan rata-rata rating untuk restoran
     public function getAverageRatingForRestaurant($restaurantId) {
