@@ -4,8 +4,8 @@
 RewriteEngine On
 
 # Redirect ke direktori public
-# RewriteCond %{REQUEST_URI} !^/public/
-# RewriteRule ^(.*)$ public/$1 [L,QSA]
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ public/$1 [L,QSA]
 
 # Aturan untuk mencegah akses langsung ke direktori sensitif
 RewriteRule ^config/.*$ - [F,L]

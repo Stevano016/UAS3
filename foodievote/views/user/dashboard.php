@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard User - FoodieVote</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
     <?php
-    require_once '../../core/middleware.php';
-    require_once '../../modules/users/user.model.php';
-    require_once '../../modules/ratings/rating.model.php';
+    require_once '../core/middleware.php';
+    require_once '../modules/users/user.model.php';
+    require_once '../modules/ratings/rating.model.php';
     
     requireLogin();
     requireUser();
@@ -26,14 +26,14 @@
     
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="../guest/index.php">FoodieVote</a>
+            <a class="navbar-brand" href="index.php">FoodieVote</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="../../guest/index.php">Home</a>
+                        <a class="nav-link" href="index.php">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="../../guest/restaurants.php">Restoran</a>
@@ -49,7 +49,7 @@
                             <li><a class="dropdown-item" href="profile.php">Profil Saya</a></li>
                             <li><a class="dropdown-item" href="my-ratings.php">Rating Saya</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="../../../public/logout.php">Logout</a></li>
+                            <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                         </ul>
                     </li>
                 </ul>

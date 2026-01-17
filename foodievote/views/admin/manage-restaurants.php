@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Restoran - FoodieVote Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
     <?php
-    require_once '../../core/middleware.php';
-    require_once '../../modules/restaurants/restaurant.model.php';
-    require_once '../../modules/restaurants/restaurant.controller.php';
+    require_once '../core/middleware.php';
+    require_once '../modules/restaurants/restaurant.model.php';
+    require_once '../modules/restaurants/restaurant.controller.php';
     
     requireLogin();
     requireAdmin();
@@ -94,19 +94,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.php">Dashboard</a>
+                        <a class="nav-link" href="index.php?page=home">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="manage-users.php">Kelola User</a>
+                        <a class="nav-link" href="index.php?page=manage-users">Kelola User</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="manage-restaurants.php">Kelola Restoran</a>
+                        <a class="nav-link active" href="index.php?page=manage-restaurants">Kelola Restoran</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="manage-foods.php">Kelola Makanan</a>
+                        <a class="nav-link" href="index.php?page=manage-foods">Kelola Makanan</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="manage-ratings.php">Kelola Rating</a>
+                        <a class="nav-link" href="index.php?page=manage-ratings">Kelola Rating</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -115,7 +115,7 @@
                             Halo, <?php echo htmlspecialchars(getSession('username')); ?>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="../../../public/logout.php">Logout</a></li>
+                            <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                         </ul>
                     </li>
                 </ul>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodieVote - Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -26,7 +26,7 @@
                         <a class="nav-link" href="foods.php">Makanan</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../public/login.php">Login</a>
+                        <a class="nav-link" href="login.php">Login</a>
                     </li>
                 </ul>
             </div>
@@ -63,7 +63,7 @@
                             <div class="card-body text-center">
                                 <h5 class="card-title">Beri Penilaian</h5>
                                 <p class="card-text">Bagikan pengalaman kuliner Anda dan bantu orang lain menemukan tempat terbaik</p>
-                                <a href="../../public/login.php" class="btn btn-primary">Login untuk Memberi Rating</a>
+                                <a href="login.php" class="btn btn-primary">Login untuk Memberi Rating</a>
                             </div>
                         </div>
                     </div>

@@ -2,13 +2,9 @@
 require_once '../config/config.php';
 require_once '../modules/users/user.controller.php';
 
-// Cek apakah user sudah login
+// Cek apakah user sudah login, jika ya, arahkan ke halaman utama
 if (isLoggedIn()) {
-    if (isAdmin()) {
-        redirect('../views/admin/dashboard.php');
-    } else {
-        redirect('../views/user/dashboard.php');
-    }
+    redirect('/');
 }
 
 $userController = new UserController();
@@ -24,11 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $messageType = $result['success'] ? 'success' : 'danger';
 
     if ($result['success']) {
-        if (getSession('role') === 'admin') {
-            redirect('../views/admin/dashboard.php');
-        } else {
-            redirect('../views/user/dashboard.php');
-        }
+        // Arahkan ke halaman utama, front controller akan menangani view yang benar
+        redirect('/');
     }
 }
 ?>

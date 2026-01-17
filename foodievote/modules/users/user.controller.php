@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../core/session.php';
 require_once 'user.model.php';
 
 class UserController {
@@ -12,7 +13,10 @@ class UserController {
     // Fungsi untuk login
     public function login($username, $password) {
         // Validasi input
-        if (empty($username) || empty($password)) {
+        $trimmedUsername = trim($username);
+        $trimmedPassword = trim($password);
+
+        if (empty($trimmedUsername) || empty($trimmedPassword)) {
             return [
                 'success' => false,
                 'message' => 'Username dan password harus diisi'
@@ -20,8 +24,9 @@ class UserController {
         }
         
         // Cek apakah user ada dan password benar
-        $user = $this->userModel->getUserByUsername($username);
-        if ($user && password_verify($password, $user['password'])) {
+        $user = $this->userModel->getUserByUsername($trimmedUsername);
+        
+        if ($user && password_verify($trimmedPassword, $user['password'])) {
             // Set session
             setSession('user_id', $user['id']);
             setSession('username', $user['username']);
