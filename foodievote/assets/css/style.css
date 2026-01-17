@@ -74,3 +74,13 @@ footer {
     margin-top: 40px;
     color: #6c757d;
 }
+
+/* Override dashboard styles for non-admin pages */
+:not(.admin-container) .navbar-admin {
+    display: none;
+}
+
+/* Adjust body padding for non-admin pages */
+body:not(.admin-body) {
+    padding-top: 20px;
+}

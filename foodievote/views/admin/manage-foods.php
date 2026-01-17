@@ -79,7 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<h1>Kelola Makanan</h1>
+<div class="dashboard-header">
+    <h1>Kelola Makanan</h1>
+</div>
+
 <?php if ($message): ?>
     <div class="alert alert-<?php echo $messageType; ?> alert-dismissible fade show" role="alert">
         <?php echo htmlspecialchars($message); ?>
@@ -88,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php endif; ?>
 
 <!-- Form Tambah Makanan -->
-<div class="card mb-4">
+<div class="card mb-4 fade-in-section">
     <div class="card-header">
         <h5>Tambah Makanan Baru</h5>
     </div>
@@ -126,19 +129,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" class="form-control" id="image_url" name="image_url">
                 </div>
             </div>
-            <button type="submit" name="add_food" class="btn btn-primary">Tambah Makanan</button>
+            <button type="submit" name="add_food" class="btn btn-primary pulse-animation">Tambah Makanan</button>
         </form>
     </div>
 </div>
 
 <!-- Daftar Makanan -->
-<div class="card">
-    <div class="card-header">
+<div class="card fade-in-section">
+    <div class="card-header d-flex justify-content-between align-items-center">
         <h5>Daftar Makanan</h5>
+        <span class="text-muted">Total: <?php echo count($foods); ?> item</span>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -159,11 +163,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td>
                                 <?php
                                 $avgRating = $food['avg_rating'] ? round($food['avg_rating'], 1) : 0;
-                                echo $avgRating . ' ★';
+                                echo '<span class="rating-stars">';
+                                for ($i = 1; $i <= 5; $i++) {
+                                    if ($i <= $avgRating) {
+                                        echo '★';
+                                    } else {
+                                        echo '☆';
+                                    }
+                                }
+                                echo '</span> (' . $avgRating . ')';
                                 ?>
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $food['id']; ?>">Edit</button>
+                                <button class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $food['id']; ?>">Edit</button>
                                 <form method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus makanan ini?')">
                                     <input type="hidden" name="food_id" value="<?php echo $food['id']; ?>">
                                     <button type="submit" name="delete_food" class="btn btn-sm btn-outline-danger">Hapus</button>
@@ -174,6 +186,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </tbody>
             </table>
         </div>
+
+        <?php if (empty($foods)): ?>
+            <div class="text-center py-5">
+                <div class="mb-3">🍽️</div>
+                <h5 class="text-muted">Belum ada makanan</h5>
+                <p class="text-muted">Tambahkan makanan pertama Anda dengan formulir di atas</p>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 

@@ -1,51 +1,305 @@
 <?php
 require_once '../core/middleware.php';
 require_once '../modules/users/user.model.php';
+require_once '../modules/restaurants/restaurant.model.php';
+require_once '../modules/foods/food.model.php';
+require_once '../modules/ratings/rating.model.php';
 
 requireLogin();
 requireAdmin();
 
 $userModel = new UserModel();
+$restaurantModel = new RestaurantModel();
+$foodModel = new FoodModel();
+$ratingModel = new RatingModel();
+
 $currentUser = $userModel->getUserById(getSession('user_id'));
+
+// Get statistics
+$totalUsers = count($userModel->getAllUsers());
+$totalRestaurants = count($restaurantModel->getAllRestaurants());
+$totalFoods = count($foodModel->getAllFoods());
+$totalRatings = count($ratingModel->getAllRatings());
+
+// Get recent activities (you can customize this based on your needs)
+$recentRatings = array_slice($ratingModel->getAllRatings(), 0, 5);
 ?>
 
-<h1>Dashboard Administrator</h1>
-<p>Selamat datang, <strong><?php echo htmlspecialchars($currentUser['username']); ?></strong>!</p>
+<style>
+.dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
 
-<div class="row mt-4">
-    <div class="col-md-3 mb-4">
-        <div class="card text-white bg-primary">
-            <div class="card-body text-center">
-                <h5 class="card-title">Kelola User</h5>
-                <p class="card-text">Tambah, edit, atau hapus akun pengguna</p>
-                <a href="index.php?page=manage-users" class="btn btn-light">Lihat</a>
+.stat-card {
+    border: none;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.stat-card .card-body {
+    padding: 2rem;
+}
+
+.stat-icon {
+    font-size: 3rem;
+    opacity: 0.2;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.quick-action-card {
+    border: none;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 100%;
+    background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.quick-action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.quick-action-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.recent-activity-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.activity-item {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s ease;
+}
+
+.activity-item:hover {
+    background: #f8f9fa;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.badge-custom {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease;
+}
+
+.greeting-text {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-subtitle {
+    opacity: 0.9;
+    font-size: 1.1rem;
+}
+</style>
+
+<!-- Dashboard Header -->
+<div class="dashboard-header fade-in-up">
+    <div class="greeting-text">👋 Selamat Datang Kembali!</div>
+    <div class="welcome-subtitle">
+        Halo, <strong><?php echo htmlspecialchars($currentUser['username']); ?></strong> - Kelola sistem FoodieVote dengan mudah
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-4 fade-in-up" style="animation-delay: 0.1s">
+        <div class="stat-card bg-primary text-white">
+            <div class="card-body">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number"><?php echo $totalUsers; ?></div>
+                <div class="stat-label">Total Pengguna</div>
             </div>
         </div>
     </div>
-    <div class="col-md-3 mb-4">
-        <div class="card text-white bg-success">
-            <div class="card-body text-center">
-                <h5 class="card-title">Kelola Restoran</h5>
-                <p class="card-text">Tambah, edit, atau hapus data restoran</p>
-                <a href="index.php?page=manage-restaurants" class="btn btn-light">Lihat</a>
+    <div class="col-lg-3 col-md-6 mb-4 fade-in-up" style="animation-delay: 0.2s">
+        <div class="stat-card bg-success text-white">
+            <div class="card-body">
+                <div class="stat-icon">🏪</div>
+                <div class="stat-number"><?php echo $totalRestaurants; ?></div>
+                <div class="stat-label">Total Restoran</div>
             </div>
         </div>
     </div>
-    <div class="col-md-3 mb-4">
-        <div class="card text-white bg-info">
-            <div class="card-body text-center">
-                <h5 class="card-title">Kelola Makanan</h5>
-                <p class="card-text">Tambah, edit, atau hapus data makanan</p>
-                <a href="index.php?page=manage-foods" class="btn btn-light">Lihat</a>
+    <div class="col-lg-3 col-md-6 mb-4 fade-in-up" style="animation-delay: 0.3s">
+        <div class="stat-card bg-info text-white">
+            <div class="card-body">
+                <div class="stat-icon">🍔</div>
+                <div class="stat-number"><?php echo $totalFoods; ?></div>
+                <div class="stat-label">Total Makanan</div>
             </div>
         </div>
     </div>
-    <div class="col-md-3 mb-4">
-        <div class="card text-white bg-warning">
-            <div class="card-body text-center">
-                <h5 class="card-title">Kelola Rating</h5>
-                <p class="card-text">Moderasi dan tinjau rating pengguna</p>
-                <a href="index.php?page=manage-ratings" class="btn btn-light text-dark">Lihat</a>
+    <div class="col-lg-3 col-md-6 mb-4 fade-in-up" style="animation-delay: 0.4s">
+        <div class="stat-card bg-warning text-white">
+            <div class="card-body">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-number"><?php echo $totalRatings; ?></div>
+                <div class="stat-label">Total Rating</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12 mb-3">
+        <h4>🚀 Aksi Cepat</h4>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4 fade-in-up" style="animation-delay: 0.5s">
+        <a href="index.php?page=manage-users" class="text-decoration-none">
+            <div class="quick-action-card">
+                <div class="card-body text-center">
+                    <div class="quick-action-icon">👥</div>
+                    <h5 class="card-title text-primary">Kelola User</h5>
+                    <p class="card-text text-muted">Tambah, edit, atau hapus akun pengguna</p>
+                    <span class="btn btn-sm btn-outline-primary">Kelola →</span>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4 fade-in-up" style="animation-delay: 0.6s">
+        <a href="index.php?page=manage-restaurants" class="text-decoration-none">
+            <div class="quick-action-card">
+                <div class="card-body text-center">
+                    <div class="quick-action-icon">🏪</div>
+                    <h5 class="card-title text-success">Kelola Restoran</h5>
+                    <p class="card-text text-muted">Tambah, edit, atau hapus data restoran</p>
+                    <span class="btn btn-sm btn-outline-success">Kelola →</span>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4 fade-in-up" style="animation-delay: 0.7s">
+        <a href="index.php?page=manage-foods" class="text-decoration-none">
+            <div class="quick-action-card">
+                <div class="card-body text-center">
+                    <div class="quick-action-icon">🍔</div>
+                    <h5 class="card-title text-info">Kelola Makanan</h5>
+                    <p class="card-text text-muted">Tambah, edit, atau hapus data makanan</p>
+                    <span class="btn btn-sm btn-outline-info">Kelola →</span>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4 fade-in-up" style="animation-delay: 0.8s">
+        <a href="index.php?page=manage-ratings" class="text-decoration-none">
+            <div class="quick-action-card">
+                <div class="card-body text-center">
+                    <div class="quick-action-icon">⭐</div>
+                    <h5 class="card-title text-warning">Kelola Rating</h5>
+                    <p class="card-text text-muted">Moderasi dan tinjau rating pengguna</p>
+                    <span class="btn btn-sm btn-outline-warning">Kelola →</span>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-12 mb-3">
+        <h4>📊 Aktivitas Terbaru</h4>
+    </div>
+    <div class="col-12 fade-in-up" style="animation-delay: 0.9s">
+        <div class="recent-activity-card">
+            <div class="card-body">
+                <?php if (!empty($recentRatings)): ?>
+                    <?php foreach ($recentRatings as $rating): ?>
+                        <div class="activity-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong><?php echo htmlspecialchars($rating['username'] ?? 'Unknown'); ?></strong>
+                                    memberikan rating
+                                    <span class="badge-custom bg-warning text-dark">
+                                        <?php echo $rating['rating']; ?> ⭐
+                                    </span>
+                                    untuk
+                                    <strong>
+                                        <?php 
+                                        if (!empty($rating['food_name'])) {
+                                            echo htmlspecialchars($rating['food_name']);
+                                        } else {
+                                            echo htmlspecialchars($rating['restaurant_name'] ?? 'Item');
+                                        }
+                                        ?>
+                                    </strong>
+                                    <div class="text-muted small mt-1">
+                                        "<?php echo htmlspecialchars(substr($rating['review'] ?? '', 0, 80)); ?><?php echo strlen($rating['review'] ?? '') > 80 ? '...' : ''; ?>"
+                                    </div>
+                                </div>
+                                <small class="text-muted">
+                                    <?php echo isset($rating['created_at']) ? date('d/m/Y', strtotime($rating['created_at'])) : '-'; ?>
+                                </small>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    <div class="text-center mt-3">
+                        <a href="index.php?page=manage-ratings" class="btn btn-sm btn-outline-primary">
+                            Lihat Semua Rating →
+                        </a>
+                    </div>
+                <?php else: ?>
+                    <div class="text-center py-5">
+                        <div class="mb-3" style="font-size: 3rem;">📝</div>
+                        <h5 class="text-muted">Belum Ada Aktivitas</h5>
+                        <p class="text-muted">Aktivitas rating akan muncul di sini</p>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

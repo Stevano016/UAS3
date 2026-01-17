@@ -61,7 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<h1>Kelola Rating</h1>
+<div class="dashboard-header">
+    <h1>Kelola Rating</h1>
+</div>
 
 <?php if ($message): ?>
     <div class="alert alert-<?php echo $messageType; ?> alert-dismissible fade show" role="alert">
@@ -71,13 +73,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php endif; ?>
 
 <!-- Daftar Rating -->
-<div class="card">
-    <div class="card-header">
+<div class="card fade-in-section">
+    <div class="card-header d-flex justify-content-between align-items-center">
         <h5>Daftar Rating dan Ulasan</h5>
+        <span class="text-muted">Total: <?php echo count($ratings); ?> rating</span>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -93,24 +96,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php foreach ($ratings as $rating): ?>
                         <tr>
                             <td><?php echo $rating['id']; ?></td>
-                            <td><?php echo htmlspecialchars($rating['username']); ?></td>
+                            <td><?php echo htmlspecialchars($rating['username'] ?? 'Unknown'); ?></td>
                             <td>
-                                <?php if ($rating['food_name']): ?>
-                                    <?php echo htmlspecialchars($rating['food_name']); ?> (Makanan)<br>
-                                    <small class="text-muted">di <?php echo htmlspecialchars($rating['restaurant_name']); ?></small>
+                                <?php if (!empty($rating['food_name'])): ?>
+                                    <strong><?php echo htmlspecialchars($rating['food_name']); ?></strong> (Makanan)<br>
+                                    <small class="text-muted">di <?php echo htmlspecialchars($rating['restaurant_name'] ?? 'Restoran Tidak Diketahui'); ?></small>
                                 <?php else: ?>
-                                    <?php echo htmlspecialchars($rating['restaurant_name']); ?> (Restoran)
+                                    <strong><?php echo htmlspecialchars($rating['restaurant_name'] ?? 'Restoran Tidak Diketahui'); ?></strong> (Restoran)
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                    <span class="text-warning"><?php echo $i <= $rating['rating'] ? '★' : '☆'; ?></span>
-                                <?php endfor; ?>
+                                <?php
+                                echo '<span class="rating-stars">';
+                                for ($i = 1; $i <= 5; $i++):
+                                    echo $i <= $rating['rating'] ? '★' : '☆';
+                                endfor;
+                                echo '</span>';
+                                ?>
                             </td>
-                            <td><?php echo htmlspecialchars(substr($rating['review'], 0, 50)); ?><?php echo strlen($rating['review']) > 50 ? '...' : ''; ?></td>
+                            <td><?php echo htmlspecialchars(substr($rating['review'] ?? '', 0, 70)); ?><?php echo strlen($rating['review'] ?? '') > 70 ? '...' : ''; ?></td>
                             <td><?php echo isset($rating['created_at']) ? date('d/m/Y H:i', strtotime($rating['created_at'])) : '-'; ?></td>
                             <td class="text-center">
-                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $rating['id']; ?>">Edit</button>
+                                <button class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $rating['id']; ?>">Edit</button>
                                 <form method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus rating ini?')">
                                     <input type="hidden" name="rating_id" value="<?php echo $rating['id']; ?>">
                                     <button type="submit" name="delete_rating" class="btn btn-sm btn-outline-danger">Hapus</button>
@@ -121,6 +128,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </tbody>
             </table>
         </div>
+
+        <?php if (empty($ratings)): ?>
+            <div class="text-center py-5">
+                <div class="mb-3">⭐</div>
+                <h5 class="text-muted">Belum ada rating</h5>
+                <p class="text-muted">Rating akan muncul di sini ketika pengguna mulai memberikan penilaian</p>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -137,15 +152,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="modal-body">
                         <input type="hidden" name="rating_id" value="<?php echo $rating['id']; ?>">
                         <div class="mb-3">
-                            <label class="form-label">User: <?php echo htmlspecialchars($rating['username']); ?></label>
+                            <label class="form-label">User: <?php echo htmlspecialchars($rating['username'] ?? 'Unknown'); ?></label>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">
                                 Item: 
-                                <?php if ($rating['food_name']): ?>
-                                    <?php echo htmlspecialchars($rating['food_name']); ?> (Makanan) di <?php echo htmlspecialchars($rating['restaurant_name']); ?>
+                                <?php if (!empty($rating['food_name'])): ?>
+                                    <?php echo htmlspecialchars($rating['food_name']); ?> (Makanan) di <?php echo htmlspecialchars($rating['restaurant_name'] ?? 'Restoran Tidak Diketahui'); ?>
                                 <?php else: ?>
-                                    <?php echo htmlspecialchars($rating['restaurant_name']); ?> (Restoran)
+                                    <?php echo htmlspecialchars($rating['restaurant_name'] ?? 'Restoran Tidak Diketahui'); ?> (Restoran)
                                 <?php endif; ?>
                             </label>
                         </div>
@@ -164,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div class="mb-3">
                             <label for="edit_review_<?php echo $rating['id']; ?>" class="form-label">Ulasan</label>
-                            <textarea class="form-control" id="edit_review_<?php echo $rating['id']; ?>" name="review" rows="3" required><?php echo htmlspecialchars($rating['review']); ?></textarea>
+                            <textarea class="form-control" id="edit_review_<?php echo $rating['id']; ?>" name="review" rows="3" required><?php echo htmlspecialchars($rating['review'] ?? ''); ?></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

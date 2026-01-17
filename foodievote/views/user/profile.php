@@ -42,17 +42,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="col-md-8 mx-auto">
-    <h1>Profil Saya</h1>
-    
+<div class="col-12 col-lg-8 mx-auto">
+    <div class="dashboard-header">
+        <h1>Profil Saya</h1>
+    </div>
+
     <?php if ($message): ?>
         <div class="alert alert-<?php echo $messageType; ?> alert-dismissible fade show" role="alert">
             <?php echo htmlspecialchars($message); ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>
-    
-    <div class="card">
+
+    <div class="card mb-4 fade-in-section">
         <div class="card-header">
             <h5>Informasi Akun</h5>
         </div>
@@ -70,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     </div>
-    
-    <div class="card mt-4">
+
+    <div class="card fade-in-section">
         <div class="card-header">
             <h5>Ganti Password</h5>
         </div>

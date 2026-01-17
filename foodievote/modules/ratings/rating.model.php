@@ -10,11 +10,15 @@ class RatingModel {
     
     // Mendapatkan semua rating
     public function getAllRatings() {
-        $sql = "SELECT r.id, r.user_id, r.restaurant_id, r.food_id, r.rating, r.review, r.created_at, u.username, res.name as restaurant_name, f.name as food_name 
+        $sql = "SELECT r.id, r.user_id, r.restaurant_id, r.food_id, r.rating, r.review, r.created_at, 
+                u.username, 
+                COALESCE(res.name, res2.name) as restaurant_name, 
+                f.name as food_name 
                 FROM ratings r 
                 JOIN users u ON r.user_id = u.id 
                 LEFT JOIN restaurants res ON r.restaurant_id = res.id 
                 LEFT JOIN foods f ON r.food_id = f.id 
+                LEFT JOIN restaurants res2 ON f.restaurant_id = res2.id
                 ORDER BY r.created_at DESC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
@@ -23,11 +27,15 @@ class RatingModel {
     
     // Mendapatkan rating berdasarkan ID
     public function getRatingById($id) {
-        $sql = "SELECT r.*, u.username, res.name as restaurant_name, f.name as food_name 
+        $sql = "SELECT r.*, 
+                u.username, 
+                COALESCE(res.name, res2.name) as restaurant_name, 
+                f.name as food_name 
                 FROM ratings r 
                 JOIN users u ON r.user_id = u.id 
                 LEFT JOIN restaurants res ON r.restaurant_id = res.id 
                 LEFT JOIN foods f ON r.food_id = f.id 
+                LEFT JOIN restaurants res2 ON f.restaurant_id = res2.id
                 WHERE r.id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -37,11 +45,15 @@ class RatingModel {
     
     // Mendapatkan rating berdasarkan user
     public function getRatingsByUser($userId) {
-        $sql = "SELECT r.id, r.user_id, r.restaurant_id, r.food_id, r.rating, r.review, r.created_at, u.username, res.name as restaurant_name, f.name as food_name 
+        $sql = "SELECT r.id, r.user_id, r.restaurant_id, r.food_id, r.rating, r.review, r.created_at, 
+                u.username, 
+                COALESCE(res.name, res2.name) as restaurant_name, 
+                f.name as food_name 
                 FROM ratings r 
                 JOIN users u ON r.user_id = u.id 
                 LEFT JOIN restaurants res ON r.restaurant_id = res.id 
                 LEFT JOIN foods f ON r.food_id = f.id 
+                LEFT JOIN restaurants res2 ON f.restaurant_id = res2.id
                 WHERE r.user_id = :user_id
                 ORDER BY r.created_at DESC";
         $stmt = $this->conn->prepare($sql);
@@ -52,7 +64,9 @@ class RatingModel {
     
     // Mendapatkan rating untuk restoran tertentu
     public function getRatingsByRestaurant($restaurantId) {
-        $sql = "SELECT r.id, r.user_id, r.restaurant_id, r.food_id, r.rating, r.review, r.created_at, u.username, res.name as restaurant_name 
+        $sql = "SELECT r.id, r.user_id, r.restaurant_id, r.food_id, r.rating, r.review, r.created_at, 
+                u.username, 
+                res.name as restaurant_name 
                 FROM ratings r 
                 JOIN users u ON r.user_id = u.id 
                 JOIN restaurants res ON r.restaurant_id = res.id 
@@ -66,10 +80,14 @@ class RatingModel {
     
     // Mendapatkan rating untuk makanan tertentu
     public function getRatingsByFood($foodId) {
-        $sql = "SELECT r.id, r.user_id, r.restaurant_id, r.food_id, r.rating, r.review, r.created_at, u.username, f.name as food_name 
+        $sql = "SELECT r.id, r.user_id, r.restaurant_id, r.food_id, r.rating, r.review, r.created_at, 
+                u.username, 
+                f.name as food_name,
+                res.name as restaurant_name
                 FROM ratings r 
                 JOIN users u ON r.user_id = u.id 
                 JOIN foods f ON r.food_id = f.id 
+                LEFT JOIN restaurants res ON f.restaurant_id = res.id
                 WHERE r.food_id = :food_id
                 ORDER BY r.created_at DESC";
         $stmt = $this->conn->prepare($sql);
