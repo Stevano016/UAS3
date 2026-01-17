@@ -12,83 +12,125 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
 // Tentukan file view yang akan dimuat
 $pageToLoad = '';
+$layoutPath = '../views/layout/'; // Define layout path once
 
 if (isLoggedIn()) {
     if (isAdmin()) {
         // --- Admin Routing ---
-        $adminViewPath = '../views/admin/';
+        $adminViewPath = '../views/admin/'; // This remains for content views
+        
+        $contentViewPath = ''; // This will hold the path to the actual content view
+        $pageTitle = 'FoodieVote Admin'; // Default title
+
         switch ($page) {
             case 'home':
-                $pageToLoad = $adminViewPath . 'dashboard.php';
+                $contentViewPath = $adminViewPath . 'dashboard.php';
+                $pageTitle = 'Dashboard Admin - FoodieVote';
                 break;
             case 'manage-users':
-                $pageToLoad = $adminViewPath . 'manage-users.php';
+                $contentViewPath = $adminViewPath . 'manage-users.php';
+                $pageTitle = 'Kelola User - FoodieVote Admin';
                 break;
             case 'manage-restaurants':
-                $pageToLoad = $adminViewPath . 'manage-restaurants.php';
+                $contentViewPath = $adminViewPath . 'manage-restaurants.php';
+                $pageTitle = 'Kelola Restoran - FoodieVote Admin';
                 break;
             case 'manage-foods':
-                $pageToLoad = $adminViewPath . 'manage-foods.php';
+                $contentViewPath = $adminViewPath . 'manage-foods.php';
+                $pageTitle = 'Kelola Makanan - FoodieVote Admin';
                 break;
             case 'manage-ratings':
-                $pageToLoad = $adminViewPath . 'manage-ratings.php';
+                $contentViewPath = $adminViewPath . 'manage-ratings.php';
+                $pageTitle = 'Kelola Rating - FoodieVote Admin';
                 break;
             default:
-                $pageToLoad = $adminViewPath . 'dashboard.php'; // Fallback ke dashboard admin
+                $contentViewPath = $adminViewPath . 'dashboard.php'; // Fallback ke dashboard admin
+                $pageTitle = 'Dashboard Admin - FoodieVote';
         }
+
+        // Load the admin layout, which will then include the contentViewPath
+        $pageToLoad = $layoutPath . 'layout_admin.php';
     } else {
         // --- User Routing ---
-        $userViewPath = '../views/user/';
-        $guestViewPath = '../views/guest/';
+        $userViewPath = '../views/user/'; // This remains for content views
+        $guestViewPath = '../views/guest/'; // This remains for content views
+
+        $contentViewPath = ''; // This will hold the path to the actual content view
+        $pageTitle = 'FoodieVote User'; // Default title
+
         switch ($page) {
             case 'home':
-                $pageToLoad = $userViewPath . 'dashboard.php';
+                $contentViewPath = $userViewPath . 'dashboard.php';
+                $pageTitle = 'Dashboard User - FoodieVote';
                 break;
             case 'profile':
-                $pageToLoad = $userViewPath . 'profile.php';
+                $contentViewPath = $userViewPath . 'profile.php';
+                $pageTitle = 'Profil Saya - FoodieVote';
                 break;
             case 'my-ratings':
-                $pageToLoad = $userViewPath . 'my-ratings.php';
+                $contentViewPath = $userViewPath . 'my-ratings.php';
+                $pageTitle = 'Rating Saya - FoodieVote';
                 break;
             case 'restaurants':
-                $pageToLoad = $guestViewPath . 'restaurants.php';
+                $contentViewPath = $guestViewPath . 'restaurants.php';
+                $pageTitle = 'Daftar Restoran - FoodieVote';
                 break;
             case 'foods':
-                $pageToLoad = $guestViewPath . 'foods.php';
+                $contentViewPath = $guestViewPath . 'foods.php';
+                $pageTitle = 'Daftar Makanan - FoodieVote';
                 break;
             case 'restaurant-detail':
-                $pageToLoad = $guestViewPath . 'restaurant-detail.php';
+                $contentViewPath = $guestViewPath . 'restaurant-detail.php';
+                $pageTitle = 'Detail Restoran - FoodieVote';
                 break;
             case 'food-detail':
-                $pageToLoad = $guestViewPath . 'food-detail.php';
+                $contentViewPath = $guestViewPath . 'food-detail.php';
+                $pageTitle = 'Detail Makanan - FoodieVote';
                 break;
             default:
-                $pageToLoad = $userViewPath . 'dashboard.php'; // Fallback ke dashboard user
+                $contentViewPath = $userViewPath . 'dashboard.php'; // Fallback ke dashboard user
+                $pageTitle = 'Dashboard User - FoodieVote';
         }
+
+        // Load the user layout, which will then include the contentViewPath
+        $pageToLoad = $layoutPath . 'layout_user.php';
     }
-} else {
-    // --- Guest Routing ---
-    $guestViewPath = '../views/guest/';
-    switch ($page) {
-        case 'home':
-            $pageToLoad = $guestViewPath . 'index.php';
-            break;
-        case 'restaurants':
-            $pageToLoad = $guestViewPath . 'restaurants.php';
-            break;
-        case 'foods':
-            $pageToLoad = $guestViewPath . 'foods.php';
-            break;
-        case 'restaurant-detail':
-            $pageToLoad = $guestViewPath . 'restaurant-detail.php';
-            break;
-        case 'food-detail':
-            $pageToLoad = $guestViewPath . 'food-detail.php';
-            break;
-        default:
-            $pageToLoad = $guestViewPath . 'index.php'; // Fallback ke guest home
+} else { // Not logged in (Guest)
+        // --- Guest Routing ---
+        $guestViewPath = '../views/guest/'; // This remains for content views
+        
+        $contentViewPath = ''; // This will hold the path to the actual content view
+        $pageTitle = 'FoodieVote Guest'; // Default title
+
+        switch ($page) {
+            case 'home':
+                $contentViewPath = $guestViewPath . 'index.php';
+                $pageTitle = 'FoodieVote - Home';
+                break;
+            case 'restaurants':
+                $contentViewPath = $guestViewPath . 'restaurants.php';
+                $pageTitle = 'Daftar Restoran - FoodieVote';
+                break;
+            case 'foods':
+                $contentViewPath = $guestViewPath . 'foods.php';
+                $pageTitle = 'Daftar Makanan - FoodieVote';
+                break;
+            case 'restaurant-detail':
+                $contentViewPath = $guestViewPath . 'restaurant-detail.php';
+                $pageTitle = 'Detail Restoran - FoodieVote';
+                break;
+            case 'food-detail':
+                $contentViewPath = $guestViewPath . 'food-detail.php';
+                $pageTitle = 'Detail Makanan - FoodieVote';
+                break;
+            default:
+                $contentViewPath = $guestViewPath . 'index.php'; // Fallback ke guest home
+                $pageTitle = 'FoodieVote - Home';
+        }
+
+        // Load the guest layout, which will then include the contentViewPath
+        $pageToLoad = $layoutPath . 'layout_guest.php';
     }
-}
 
 // Sertakan file yang sesuai
 if (file_exists($pageToLoad)) {
