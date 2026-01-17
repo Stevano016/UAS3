@@ -35,7 +35,19 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
             echo '<div class="card h-100">';
             
             if ($food['image_url']) {
-                echo '<img src="' . $food['image_url'] . '" class="card-img-top" alt="' . htmlspecialchars($food['name']) . '" style="height: 200px; object-fit: cover;">';
+                // Check if image_url is a relative path and prepend BASE_URL if needed
+                $imageSrc = $food['image_url'];
+                if (strpos($food['image_url'], 'http') !== 0) {
+                    // If it doesn't start with http, treat as relative path
+                    if (strpos($food['image_url'], '/') === 0) {
+                        // If it starts with '/', it's relative to root
+                        $imageSrc = BASE_URL . $food['image_url'];
+                    } else {
+                        // If it doesn't start with '/', prepend BASE_URL
+                        $imageSrc = BASE_URL . '/' . $food['image_url'];
+                    }
+                }
+                echo '<img src="' . $imageSrc . '" class="card-img-top" alt="' . htmlspecialchars($food['name']) . '" style="height: 200px; object-fit: cover;">';
             }
             
             echo '<div class="card-body">';

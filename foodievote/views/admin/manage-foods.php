@@ -283,14 +283,22 @@ $foods = $foodModel->getAllFoods();
                             <td><?php echo $food['id']; ?></td>
                             <td>
                                 <?php if (!empty($food['image_url'])): ?>
-                                    <?php 
-                                    // Cek apakah URL eksternal atau lokal
-                                    $imageSrc = (strpos($food['image_url'], 'http') === 0) 
-                                        ? htmlspecialchars($food['image_url']) 
-                                        : '../' . htmlspecialchars($food['image_url']); 
+                                    <?php
+                                    // Check if image_url is a relative path and prepend BASE_URL if needed
+                                    $imageSrc = $food['image_url'];
+                                    if (strpos($food['image_url'], 'http') !== 0) {
+                                        // If it doesn't start with http, treat as relative path
+                                        if (strpos($food['image_url'], '/') === 0) {
+                                            // If it starts with '/', it's relative to root
+                                            $imageSrc = BASE_URL . $food['image_url'];
+                                        } else {
+                                            // If it doesn't start with '/', prepend BASE_URL
+                                            $imageSrc = BASE_URL . '/' . $food['image_url'];
+                                        }
+                                    }
                                     ?>
-                                    <img src="<?php echo $imageSrc; ?>" 
-                                         alt="<?php echo htmlspecialchars($food['name']); ?>" 
+                                    <img src="<?php echo htmlspecialchars($imageSrc); ?>"
+                                         alt="<?php echo htmlspecialchars($food['name']); ?>"
                                          style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;"
                                          onerror="this.parentElement.innerHTML='<div style=\'width: 50px; height: 50px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;\'>🍽️</div>'">
                                 <?php else: ?>
@@ -377,12 +385,21 @@ $foods = $foodModel->getAllFoods();
                         <div class="mb-3">
                             <label class="form-label">Gambar Saat Ini</label>
                             <div>
-                                <?php 
-                                $imageSrc = (strpos($food['image_url'], 'http') === 0) 
-                                    ? htmlspecialchars($food['image_url']) 
-                                    : '../' . htmlspecialchars($food['image_url']); 
+                                <?php
+                                // Check if image_url is a relative path and prepend BASE_URL if needed
+                                $imageSrc = $food['image_url'];
+                                if (strpos($food['image_url'], 'http') !== 0) {
+                                    // If it doesn't start with http, treat as relative path
+                                    if (strpos($food['image_url'], '/') === 0) {
+                                        // If it starts with '/', it's relative to root
+                                        $imageSrc = BASE_URL . $food['image_url'];
+                                    } else {
+                                        // If it doesn't start with '/', prepend BASE_URL
+                                        $imageSrc = BASE_URL . '/' . $food['image_url'];
+                                    }
+                                }
                                 ?>
-                                <img src="<?php echo $imageSrc; ?>" alt="Current" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+                                <img src="<?php echo htmlspecialchars($imageSrc); ?>" alt="Current" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
                             </div>
                         </div>
                         <?php endif; ?>

@@ -46,7 +46,21 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
             <h1><?php echo htmlspecialchars($food['name']); ?></h1>
             
             <?php if ($food['image_url']): ?>
-                <img src="<?php echo $food['image_url']; ?>" class="img-fluid rounded mb-3" alt="<?php echo htmlspecialchars($food['name']); ?>" style="max-height: 400px; object-fit: cover;">
+                <?php
+                // Check if image_url is a relative path and prepend BASE_URL if needed
+                $imageSrc = $food['image_url'];
+                if (strpos($food['image_url'], 'http') !== 0) {
+                    // If it doesn't start with http, treat as relative path
+                    if (strpos($food['image_url'], '/') === 0) {
+                        // If it starts with '/', it's relative to root
+                        $imageSrc = BASE_URL . $food['image_url'];
+                    } else {
+                        // If it doesn't start with '/', prepend BASE_URL
+                        $imageSrc = BASE_URL . '/' . $food['image_url'];
+                    }
+                }
+                ?>
+                <img src="<?php echo $imageSrc; ?>" class="img-fluid rounded mb-3" alt="<?php echo htmlspecialchars($food['name']); ?>" style="max-height: 400px; object-fit: cover;">
             <?php endif; ?>
             
             <div class="card mb-4">

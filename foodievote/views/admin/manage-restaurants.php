@@ -279,13 +279,22 @@ $restaurants = $restaurantModel->getAllRestaurants();
                             <td><?php echo $restaurant['id']; ?></td>
                             <td>
                                 <?php if (!empty($restaurant['image_url'])): ?>
-                                    <?php 
-                                    $imageSrc = (strpos($restaurant['image_url'], 'http') === 0) 
-                                        ? htmlspecialchars($restaurant['image_url']) 
-                                        : '../' . htmlspecialchars($restaurant['image_url']); 
+                                    <?php
+                                    // Check if image_url is a relative path and prepend BASE_URL if needed
+                                    $imageSrc = $restaurant['image_url'];
+                                    if (strpos($restaurant['image_url'], 'http') !== 0) {
+                                        // If it doesn't start with http, treat as relative path
+                                        if (strpos($restaurant['image_url'], '/') === 0) {
+                                            // If it starts with '/', it's relative to root
+                                            $imageSrc = BASE_URL . $restaurant['image_url'];
+                                        } else {
+                                            // If it doesn't start with '/', prepend BASE_URL
+                                            $imageSrc = BASE_URL . '/' . $restaurant['image_url'];
+                                        }
+                                    }
                                     ?>
-                                    <img src="<?php echo $imageSrc; ?>" 
-                                         alt="<?php echo htmlspecialchars($restaurant['name']); ?>" 
+                                    <img src="<?php echo htmlspecialchars($imageSrc); ?>"
+                                         alt="<?php echo htmlspecialchars($restaurant['name']); ?>"
                                          style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;"
                                          onerror="this.parentElement.innerHTML='<div style=\'width: 50px; height: 50px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;\'>🏪</div>'">
                                 <?php else: ?>
@@ -370,12 +379,21 @@ $restaurants = $restaurantModel->getAllRestaurants();
                         <div class="mb-3">
                             <label class="form-label">Gambar Saat Ini</label>
                             <div>
-                                <?php 
-                                $imageSrc = (strpos($restaurant['image_url'], 'http') === 0) 
-                                    ? htmlspecialchars($restaurant['image_url']) 
-                                    : '../' . htmlspecialchars($restaurant['image_url']); 
+                                <?php
+                                // Check if image_url is a relative path and prepend BASE_URL if needed
+                                $imageSrc = $restaurant['image_url'];
+                                if (strpos($restaurant['image_url'], 'http') !== 0) {
+                                    // If it doesn't start with http, treat as relative path
+                                    if (strpos($restaurant['image_url'], '/') === 0) {
+                                        // If it starts with '/', it's relative to root
+                                        $imageSrc = BASE_URL . $restaurant['image_url'];
+                                    } else {
+                                        // If it doesn't start with '/', prepend BASE_URL
+                                        $imageSrc = BASE_URL . '/' . $restaurant['image_url'];
+                                    }
+                                }
                                 ?>
-                                <img src="<?php echo $imageSrc; ?>" alt="Current" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+                                <img src="<?php echo htmlspecialchars($imageSrc); ?>" alt="Current" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
                             </div>
                         </div>
                         <?php endif; ?>
