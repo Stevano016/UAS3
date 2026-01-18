@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - FoodieVote</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -46,32 +47,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p class="text-muted mb-0">Sign in to your account</p>
                 </div>
                 <div class="card-body p-4">
-                    <?php if ($message): ?>
+                    <?php if ($message) { ?>
                         <div class="alert alert-<?php echo $messageType; ?> alert-dismissible fade show" role="alert">
                             <?php echo htmlspecialchars($message); ?>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
-                    <?php endif; ?>
+                    <?php } ?>
 
-                    <form method="POST">
-    <div class="mb-3">
-        <label for="username" class="form-label fw-medium">Username</label>
-        <input type="text" class="form-control" id="username" name="username" required>
-    </div>
+                    <form method="POST" id="loginForm">
+                        <!-- Username -->
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-medium">Username</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="username" 
+                                   name="username" 
+                                   autocomplete="username"
+                                   required>
+                        </div>
 
-    <div class="mb-3">
-        <label for="password" class="form-label fw-medium">Password</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-    </div>
+                        <!-- Password -->
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-medium">Password</label>
+                            <div class="input-group">
+                                <input type="password" 
+                                       class="form-control" 
+                                       id="password" 
+                                       name="password" 
+                                       autocomplete="current-password"
+                                       required>
+                                <button class="btn btn-outline-secondary" 
+                                        type="button" 
+                                        id="togglePassword" 
+                                        tabindex="-1"
+                                        aria-label="Toggle password visibility">
+                                    <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                </button>
+                            </div>
+                        </div>
 
-    <button type="submit" class="btn btn-primary w-100 py-2">
-        Login
-    </button>
-</form>
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary w-100 py-2">
+                            Login
+                        </button>
+                    </form>
 
-
+                    <!-- Register Link -->
                     <div class="text-center mt-4">
-                        <p class="mb-0">Don't have an account? <a href="<?php echo BASE_URL; ?>/public/register.php" class="text-decoration-none">Sign up here</a></p>
+                        <p class="mb-0">Don't have an account? 
+                            <a href="<?php echo BASE_URL; ?>/public/register.php" class="text-decoration-none">Sign up here</a>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -79,5 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+     <script src="<?php echo BASE_URL; ?>/assets/js/Login.js"></script>
 </body>
 </html>

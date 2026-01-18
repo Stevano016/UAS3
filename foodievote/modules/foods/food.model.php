@@ -44,7 +44,8 @@ class FoodModel {
     // Mendapatkan semua makanan
     public function getAllFoods() {
         try {
-            $sql = "SELECT f.id, f.name, f.description, f.price, f.image_url, r.name as restaurant_name, 
+            $sql = "SELECT f.id, f.name, f.description, f.price, f.image_url, f.restaurant_id, 
+                    r.name as restaurant_name, 
                     AVG(rt.rating) as avg_rating, COUNT(rt.id) as total_ratings 
                     FROM foods f 
                     JOIN restaurants r ON f.restaurant_id = r.id 
@@ -90,7 +91,8 @@ class FoodModel {
                 return [];
             }
             
-            $sql = "SELECT f.id, f.name, f.description, f.price, f.image_url, r.name as restaurant_name, 
+            $sql = "SELECT f.id, f.name, f.description, f.price, f.image_url, f.restaurant_id, 
+                    r.name as restaurant_name, 
                     AVG(rt.rating) as avg_rating, COUNT(rt.id) as total_ratings 
                     FROM foods f 
                     JOIN restaurants r ON f.restaurant_id = r.id 
@@ -114,7 +116,8 @@ class FoodModel {
         try {
             $restaurantId = $this->validateId($restaurantId);
             
-            $sql = "SELECT f.id, f.name, f.description, f.price, f.image_url, r.name as restaurant_name, 
+            $sql = "SELECT f.id, f.name, f.description, f.price, f.image_url, f.restaurant_id, 
+                    r.name as restaurant_name, 
                     AVG(rt.rating) as avg_rating, COUNT(rt.id) as total_ratings 
                     FROM foods f 
                     JOIN restaurants r ON f.restaurant_id = r.id 

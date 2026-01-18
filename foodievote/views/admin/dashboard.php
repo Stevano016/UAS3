@@ -136,8 +136,8 @@ $recentRatings = array_slice($ratingModel->getAllRatings(), 0, 5);
     <div class="col-12 fade-in-up" style="animation-delay: 0.9s">
         <div class="recent-activity-card">
             <div class="card-body">
-                <?php if (!empty($recentRatings)): ?>
-                    <?php foreach ($recentRatings as $rating): ?>
+                <?php if (!empty($recentRatings)) { ?>
+                    <?php foreach ($recentRatings as $rating) { ?>
                         <div class="activity-item">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
@@ -148,13 +148,13 @@ $recentRatings = array_slice($ratingModel->getAllRatings(), 0, 5);
                                     </span>
                                     untuk
                                     <strong>
-                                        <?php 
+                                        <?php
                                         if (!empty($rating['food_name'])) {
                                             echo htmlspecialchars($rating['food_name']);
                                         } else {
                                             echo htmlspecialchars($rating['restaurant_name'] ?? 'Item');
                                         }
-                                        ?>
+                        ?>
                                     </strong>
                                     <div class="text-muted small mt-1">
                                         "<?php echo htmlspecialchars(substr($rating['review'] ?? '', 0, 80)); ?><?php echo strlen($rating['review'] ?? '') > 80 ? '...' : ''; ?>"
@@ -165,19 +165,19 @@ $recentRatings = array_slice($ratingModel->getAllRatings(), 0, 5);
                                 </small>
                             </div>
                         </div>
-                    <?php endforeach; ?>
+                    <?php } ?>
                     <div class="text-center mt-3">
                         <a href="index.php?page=manage-ratings" class="btn btn-sm btn-outline-primary">
                             Lihat Semua Rating →
                         </a>
                     </div>
-                <?php else: ?>
+                <?php } else { ?>
                     <div class="text-center py-5">
                         <div class="mb-3" style="font-size: 3rem;">📝</div>
                         <h5 class="text-muted">Belum Ada Aktivitas</h5>
                         <p class="text-muted">Aktivitas rating akan muncul di sini</p>
                     </div>
-                <?php endif; ?>
+                <?php } ?>
             </div>
         </div>
     </div>

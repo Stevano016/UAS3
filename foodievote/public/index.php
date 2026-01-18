@@ -1,4 +1,5 @@
 <?php
+
 require_once '../config/config.php';
 require_once '../core/session.php';
 
@@ -18,38 +19,38 @@ if (isLoggedIn()) {
     if (isAdmin()) {
         // --- Admin Routing ---
         $adminViewPath = '../views/admin/'; // This remains for content views
-        
+
         $contentViewPath = ''; // This will hold the path to the actual content view
         $pageTitle = 'FoodieVote Admin'; // Default title
 
         switch ($page) {
             case 'home':
-                $contentViewPath = $adminViewPath . 'dashboard.php';
+                $contentViewPath = $adminViewPath.'dashboard.php';
                 $pageTitle = 'Dashboard Admin - FoodieVote';
                 break;
             case 'manage-users':
-                $contentViewPath = $adminViewPath . 'manage-users.php';
+                $contentViewPath = $adminViewPath.'manage-users.php';
                 $pageTitle = 'Kelola User - FoodieVote Admin';
                 break;
             case 'manage-restaurants':
-                $contentViewPath = $adminViewPath . 'manage-restaurants.php';
+                $contentViewPath = $adminViewPath.'manage-restaurants.php';
                 $pageTitle = 'Kelola Restoran - FoodieVote Admin';
                 break;
             case 'manage-foods':
-                $contentViewPath = $adminViewPath . 'manage-foods.php';
+                $contentViewPath = $adminViewPath.'manage-foods.php';
                 $pageTitle = 'Kelola Makanan - FoodieVote Admin';
                 break;
             case 'manage-ratings':
-                $contentViewPath = $adminViewPath . 'manage-ratings.php';
+                $contentViewPath = $adminViewPath.'manage-ratings.php';
                 $pageTitle = 'Kelola Rating - FoodieVote Admin';
                 break;
             default:
-                $contentViewPath = $adminViewPath . 'dashboard.php'; // Fallback ke dashboard admin
+                $contentViewPath = $adminViewPath.'dashboard.php'; // Fallback ke dashboard admin
                 $pageTitle = 'Dashboard Admin - FoodieVote';
         }
 
         // Load the admin layout, which will then include the contentViewPath
-        $pageToLoad = $layoutPath . 'layout_admin.php';
+        $pageToLoad = $layoutPath.'layout_admin.php';
     } else {
         // --- User Routing ---
         $userViewPath = '../views/user/'; // This remains for content views
@@ -60,77 +61,82 @@ if (isLoggedIn()) {
 
         switch ($page) {
             case 'home':
-                $contentViewPath = $userViewPath . 'dashboard.php';
+                $contentViewPath = $userViewPath.'dashboard.php';
                 $pageTitle = 'Dashboard User - FoodieVote';
                 break;
             case 'profile':
-                $contentViewPath = $userViewPath . 'profile.php';
+                $contentViewPath = $userViewPath.'profile.php';
                 $pageTitle = 'Profil Saya - FoodieVote';
                 break;
             case 'my-ratings':
-                $contentViewPath = $userViewPath . 'my-ratings.php';
+                $contentViewPath = $userViewPath.'my-ratings.php';
                 $pageTitle = 'Rating Saya - FoodieVote';
                 break;
             case 'restaurants':
-                $contentViewPath = $guestViewPath . 'restaurants.php';
+                $contentViewPath = $guestViewPath.'restaurants.php';
                 $pageTitle = 'Daftar Restoran - FoodieVote';
                 break;
             case 'foods':
-                $contentViewPath = $guestViewPath . 'foods.php';
+                $contentViewPath = $guestViewPath.'foods.php';
                 $pageTitle = 'Daftar Makanan - FoodieVote';
                 break;
             case 'restaurant-detail':
-                $contentViewPath = $guestViewPath . 'restaurant-detail.php';
+                $contentViewPath = $guestViewPath.'restaurant-detail.php';
                 $pageTitle = 'Detail Restoran - FoodieVote';
                 break;
             case 'food-detail':
-                $contentViewPath = $guestViewPath . 'food-detail.php';
+                $contentViewPath = $guestViewPath.'food-detail.php';
                 $pageTitle = 'Detail Makanan - FoodieVote';
                 break;
             default:
-                $contentViewPath = $userViewPath . 'dashboard.php'; // Fallback ke dashboard user
+                $contentViewPath = $userViewPath.'dashboard.php'; // Fallback ke dashboard user
                 $pageTitle = 'Dashboard User - FoodieVote';
         }
 
         // Load the user layout, which will then include the contentViewPath
-        $pageToLoad = $layoutPath . 'layout_user.php';
+        $pageToLoad = $layoutPath.'layout_user.php';
     }
 } else { // Not logged in (Guest)
-        // --- Guest Routing ---
-        $guestViewPath = '../views/guest/'; // This remains for content views
-        
-        $contentViewPath = ''; // This will hold the path to the actual content view
-        $pageTitle = 'FoodieVote Guest'; // Default title
+    // --- Guest Routing ---
+    $guestViewPath = '../views/guest/'; // This remains for content views
 
-        switch ($page) {
-            case 'home':
-                $contentViewPath = $guestViewPath . 'index.php';
-                $pageTitle = 'FoodieVote - Home';
-                break;
-            case 'restaurants':
-                $contentViewPath = $guestViewPath . 'restaurants.php';
-                $pageTitle = 'Daftar Restoran - FoodieVote';
-                break;
-            case 'foods':
-                $contentViewPath = $guestViewPath . 'foods.php';
-                $pageTitle = 'Daftar Makanan - FoodieVote';
-                break;
-            case 'restaurant-detail':
-                $contentViewPath = $guestViewPath . 'restaurant-detail.php';
-                $pageTitle = 'Detail Restoran - FoodieVote';
-                break;
-            case 'food-detail':
-                $contentViewPath = $guestViewPath . 'food-detail.php';
-                $pageTitle = 'Detail Makanan - FoodieVote';
-                break;
-            default:
-                $contentViewPath = $guestViewPath . 'index.php'; // Fallback ke guest home
-                $pageTitle = 'FoodieVote - Home';
-        }
+    $contentViewPath = ''; // This will hold the path to the actual content view
+    $pageTitle = 'FoodieVote Guest'; // Default title
 
-        // Load the guest layout, which will then include the contentViewPath
-        $pageToLoad = $layoutPath . 'layout_guest.php';
+    switch ($page) {
+        case 'home':
+            $contentViewPath = $guestViewPath.'index.php';
+            $pageTitle = 'FoodieVote - Home';
+            break;
+        case 'restaurants':
+            $contentViewPath = $guestViewPath.'restaurants.php';
+            $pageTitle = 'Daftar Restoran - FoodieVote';
+            break;
+        case 'about':
+            $contentViewPath = $guestViewPath.'about.php';
+            $pageTitle = 'Tentang Kami - FoodieVote';
+            break;
+        case 'foods':
+            $contentViewPath = $guestViewPath.'foods.php';
+            $pageTitle = 'Daftar Makanan - FoodieVote';
+            break;
+        case 'restaurant-detail':
+            $contentViewPath = $guestViewPath.'restaurant-detail.php';
+            $pageTitle = 'Detail Restoran - FoodieVote';
+            break;
+        case 'food-detail':
+            $contentViewPath = $guestViewPath.'food-detail.php';
+            $pageTitle = 'Detail Makanan - FoodieVote';
+            break;
+
+        default:
+            $contentViewPath = $guestViewPath.'index.php'; // Fallback ke guest home
+            $pageTitle = 'FoodieVote - Home';
     }
+
+    // Load the guest layout, which will then include the contentViewPath
+    $pageToLoad = $layoutPath.'layout_guest.php';
+}
 
 // Sertakan file yang sesuai
 if (file_exists($pageToLoad)) {
@@ -139,7 +145,6 @@ if (file_exists($pageToLoad)) {
     // Tampilkan halaman 404 jika file tidak ditemukan
     http_response_code(404);
     // Bisa juga include file 404 kustom: require_once '../views/errors/404.php';
-    echo "<h1>404 Not Found</h1><p>The page <code>" . htmlspecialchars($page) . "</code> was not found.</p>";
+    echo '<h1>404 Not Found</h1><p>The page <code>'.htmlspecialchars($page).'</code> was not found.</p>';
     echo "<a href='index.php'>Go to Homepage</a>";
 }
-?>

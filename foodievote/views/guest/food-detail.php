@@ -14,11 +14,11 @@ $messageType = '';
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $foodId = $_GET['id'];
     $food = $foodModel->getFoodById($foodId);
-    
+
     if ($food) {
         $avgRating = $food['avg_rating'] ? round($food['avg_rating'], 1) : 0;
         $totalRatings = $food['total_ratings'] ?? 0;
-        
+
         // --- Handle Rating Submission ---
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_food_rating'])) {
             if (isLoggedIn() && isUser()) { // Ensure only logged-in users can submit
@@ -29,39 +29,41 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 $result = $ratingController->addOrUpdateRating($userId, $foodId, true, $ratingValue, $reviewText); // true for food item
                 $message = $result['message'];
                 $messageType = $result['success'] ? 'success' : 'danger';
-                
+
                 // Refresh ratings after submission
                 $ratings = $ratingModel->getRatingsByFood($foodId);
             } else {
-                $message = "Anda harus login sebagai user untuk memberikan rating.";
-                $messageType = "danger";
+                $message = 'Anda harus login sebagai user untuk memberikan rating.';
+                $messageType = 'danger';
             }
         } else {
             // Load initial ratings if not a rating submission
             $ratings = $ratingModel->getRatingsByFood($foodId);
         }
         // --- End Handle Rating Submission ---
-?>
+        ?>
+        <div class="container mt-5">
+        <div class="row">
         <div class="col-md-8">
             <h1><?php echo htmlspecialchars($food['name']); ?></h1>
             
-            <?php if ($food['image_url']): ?>
+            <?php if ($food['image_url']) { ?>
                 <?php
-                // Check if image_url is a relative path and prepend BASE_URL if needed
-                $imageSrc = $food['image_url'];
+                        // Check if image_url is a relative path and prepend BASE_URL if needed
+                        $imageSrc = $food['image_url'];
                 if (strpos($food['image_url'], 'http') !== 0) {
                     // If it doesn't start with http, treat as relative path
                     if (strpos($food['image_url'], '/') === 0) {
                         // If it starts with '/', it's relative to root
-                        $imageSrc = BASE_URL . $food['image_url'];
+                        $imageSrc = BASE_URL.$food['image_url'];
                     } else {
                         // If it doesn't start with '/', prepend BASE_URL
-                        $imageSrc = BASE_URL . '/' . $food['image_url'];
+                        $imageSrc = BASE_URL.'/'.$food['image_url'];
                     }
                 }
                 ?>
                 <img src="<?php echo $imageSrc; ?>" class="img-fluid rounded mb-3" alt="<?php echo htmlspecialchars($food['name']); ?>" style="max-height: 400px; object-fit: cover;">
-            <?php endif; ?>
+            <?php } ?>
             
             <div class="card mb-4">
                 <div class="card-body">
@@ -81,14 +83,14 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 </div>
             </div>
 
-            <?php if ($message): // Display messages here ?>
+            <?php if ($message) { // Display messages here?>
                 <div class="alert alert-<?php echo $messageType; ?> alert-dismissible fade show" role="alert">
                     <?php echo htmlspecialchars($message); ?>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
-            <?php endif; ?>
+            <?php } ?>
             
-            <?php if (isLoggedIn() && isUser()): // Show form only if logged in as user ?>
+            <?php if (isLoggedIn() && isUser()) { // Show form only if logged in as user?>
             <div class="card mb-4">
                 <div class="card-header">
                     <h5>Berikan Rating dan Ulasan Anda</h5>
@@ -115,15 +117,15 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                     </form>
                 </div>
             </div>
-            <?php elseif (isLoggedIn() && isAdmin()): // Admin can't rate ?>
+            <?php } elseif (isLoggedIn() && isAdmin()) { // Admin can't rate?>
                 <div class="alert alert-info">Admin tidak dapat memberikan rating.</div>
-            <?php else: // Not logged in ?>
+            <?php } else { // Not logged in?>
                 <div class="alert alert-info">Silakan <a href="login.php">login</a> untuk memberikan rating.</div>
-            <?php endif; ?>
+            <?php } ?>
 
             <h3>Ulasan Pelanggan</h3>
-            <?php if (!empty($ratings)): ?>
-                <?php foreach ($ratings as $rating): ?>
+            <?php if (!empty($ratings)) { ?>
+                <?php foreach ($ratings as $rating) { ?>
                     <div class="card mb-3">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
@@ -131,17 +133,17 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                 <small class="text-muted"><?php echo date('d M Y', strtotime($rating['created_at'])); ?></small>
                             </div>
                             <div class="mb-1">
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <?php for ($i = 1; $i <= 5; ++$i) { ?>
                                     <span class="text-warning"><?php echo $i <= $rating['rating'] ? '★' : '☆'; ?></span>
-                                <?php endfor; ?>
+                                <?php } ?>
                             </div>
                             <p class="card-text"><?php echo htmlspecialchars($rating['review']); ?></p>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
+                <?php } ?>
+            <?php } else { ?>
                 <p>Belum ada ulasan untuk makanan ini.</p>
-            <?php endif; ?>
+            <?php } ?>
         </div>
         
         <div class="col-md-4">
@@ -152,22 +154,22 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 <div class="card-body">
                     <?php
                     require_once '../modules/restaurants/restaurant.model.php';
-                    $restaurantModel = new RestaurantModel();
-                    $restaurant = $restaurantModel->getRestaurantById($food['restaurant_id']);
-                    
-                    if ($restaurant) {
-                        $avgRestaurantRating = $restaurant['avg_rating'] ? round($restaurant['avg_rating'], 1) : 0;
-                        $totalRestaurantRatings = $restaurant['total_ratings'] ?? 0;
-                        
-                        echo '<p class="mb-1">Alamat: ' . htmlspecialchars($restaurant['address']) . '</p>';
-                        echo '<p class="mb-1">Telepon: ' . htmlspecialchars($restaurant['phone']) . '</p>';
-                        echo '<div class="mt-2">';
-                        echo '<span class="text-warning">' . $avgRestaurantRating . ' ★</span>';
-                        echo '<small> (' . $totalRestaurantRatings . ' rating)</small>';
-                        echo '</div>';
-                        echo '<a href="index.php?page=restaurant-detail&id=' . $restaurant['id'] . '" class="btn btn-sm btn-outline-primary mt-2">Lihat Restoran</a>';
-                    }
-                    ?>
+        $restaurantModel = new RestaurantModel();
+        $restaurant = $restaurantModel->getRestaurantById($food['restaurant_id']);
+
+        if ($restaurant) {
+            $avgRestaurantRating = $restaurant['avg_rating'] ? round($restaurant['avg_rating'], 1) : 0;
+            $totalRestaurantRatings = $restaurant['total_ratings'] ?? 0;
+
+            echo '<p class="mb-1">Alamat: '.htmlspecialchars($restaurant['address']).'</p>';
+            echo '<p class="mb-1">Telepon: '.htmlspecialchars($restaurant['phone']).'</p>';
+            echo '<div class="mt-2">';
+            echo '<span class="text-warning">'.$avgRestaurantRating.' ★</span>';
+            echo '<small> ('.$totalRestaurantRatings.' rating)</small>';
+            echo '</div>';
+            echo '<a href="index.php?page=restaurant-detail&id='.$restaurant['id'].'" class="btn btn-sm btn-outline-primary mt-2">Lihat Restoran</a>';
+        }
+        ?>
                 </p>
             </div>
         </div>

@@ -42,6 +42,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         }
         // --- End Handle Rating Submission ---
 ?>
+<div class="container mt-5">
+        <div class="row">
         <div class="col-md-8">
             <h1><?php echo htmlspecialchars($restaurant['name']); ?></h1>
             

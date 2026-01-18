@@ -11,11 +11,8 @@
 </head>
 <body>
     <?php
-    require_once __DIR__ . '/../partials/navbar_admin.php';
+    require_once __DIR__.'/../partials/navbar_admin.php';
     ?>
-
-   
-
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
@@ -25,16 +22,16 @@
                             require_once $contentViewPath;
                         } else {
                             // Fallback or error message if content view is not set or not found
-                            echo "<h1>Content Not Found</h1><p>The requested content could not be displayed.</p>";
+                            echo '<h1>Content Not Found</h1><p>The requested content could not be displayed.</p>';
                         }
-                        ?>
+    ?>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <?php require_once __DIR__ . '/../partials/footer.php'; ?>
+    <?php require_once __DIR__.'/../partials/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/alterhandler.js"></script>

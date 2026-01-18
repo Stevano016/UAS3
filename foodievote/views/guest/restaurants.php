@@ -9,6 +9,8 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     $restaurants = $restaurantModel->getAllRestaurants();
 }
 ?>
+<div class="container mt-5">
+        <div class="row">
 <h1>Daftar Restoran</h1>
 
 <!-- Form pencarian -->
