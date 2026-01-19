@@ -112,9 +112,9 @@ if (isLoggedIn()) {
             $contentViewPath = $guestViewPath.'restaurants.php';
             $pageTitle = 'Daftar Restoran - FoodieVote';
             break;
-        case 'about':
-            $contentViewPath = $guestViewPath.'about.php';
-            $pageTitle = 'Tentang Kami - FoodieVote';
+        case 'kontak':
+            $contentViewPath = $guestViewPath.'kontak.php';
+            $pageTitle = 'Kontak Kami - FoodieVote';
             break;
         case 'foods':
             $contentViewPath = $guestViewPath.'foods.php';
@@ -128,10 +128,13 @@ if (isLoggedIn()) {
             $contentViewPath = $guestViewPath.'food-detail.php';
             $pageTitle = 'Detail Makanan - FoodieVote';
             break;
+    }
 
-        default:
-            $contentViewPath = $guestViewPath.'index.php'; // Fallback ke guest home
-            $pageTitle = 'FoodieVote - Home';
+    // Validasi jika halaman tidak ditemukan untuk Guest
+    if (empty($contentViewPath)) {
+        http_response_code(404);
+        require_once '../views/error/error.php';
+        exit;
     }
 
     // Load the guest layout, which will then include the contentViewPath
@@ -144,7 +147,6 @@ if (file_exists($pageToLoad)) {
 } else {
     // Tampilkan halaman 404 jika file tidak ditemukan
     http_response_code(404);
-    // Bisa juga include file 404 kustom: require_once '../views/errors/404.php';
-    echo '<h1>404 Not Found</h1><p>The page <code>'.htmlspecialchars($page).'</code> was not found.</p>';
-    echo "<a href='index.php'>Go to Homepage</a>";
+    require_once '../views/error/error.php';
+    exit;
 }

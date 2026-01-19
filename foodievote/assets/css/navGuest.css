@@ -1,0 +1,59 @@
+* {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .navbar-dark .navbar-nav .nav-link {
+        color: rgba(255, 255, 255, 0.85) !important;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    /* Hover Menu - Menggunakan Putih Transparan agar Elegan */
+    .navbar-dark .navbar-nav .nav-link:hover {
+        color: #ffffff !important;
+        background-color: rgba(255, 255, 255, 0.15) !important;
+        transform: translateY(-2px);
+    }
+
+    /* Khusus untuk halaman aktif (opsional) */
+    .navbar-dark .navbar-nav .nav-link.active {
+        color: #fbbf24 !important; /* Warna kuning senada button */
+    }
+
+    /* Tombol Login - Hover mengikuti warna cokelat navbar */
+    .btn-login {
+        transition: all 0.3s ease;
+        border: 2px solid white !important;
+    }
+
+    .btn-login:hover {
+        background-color: white !important;
+        color: #2D1B16 !important; /* Teks jadi cokelat tua saat hover putih */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Tombol Sign Up - Menggunakan warna Amber/Warm */
+    .btn-signup {
+        transition: all 0.3s ease;
+        background-color: #fbbf24 !important; /* Warna Kuning Terang */
+        border: none !important;
+        color: #2D1B16 !important; /* Teks Cokelat Tua agar kontras */
+    }
+
+    .btn-signup:hover {
+        background-color: #f59e0b !important; /* Kuning agak gelap */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+    }
+
+    /* Logo animation */
+    .navbar-brand img { transition: transform 0.3s ease; }
+    .navbar-brand:hover img { transform: rotate(5deg) scale(1.1); }

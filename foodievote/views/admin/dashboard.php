@@ -182,3 +182,4 @@ $recentRatings = array_slice($ratingModel->getAllRatings(), 0, 5);
         </div>
     </div>
 </div>
+ <?php require_once __DIR__.'/../partials/footerAdmin.php'; ?>

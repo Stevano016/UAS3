@@ -31,10 +31,12 @@
         </main>
     </div>
 
-    <?php require_once __DIR__.'/../partials/footer.php'; ?>
+ 
 
+<?php require_once __DIR__.'/../partials/modalLogout.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/alterhandler.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/prefImg.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/footerAdmin.js"></script>
 </body>
 </html>

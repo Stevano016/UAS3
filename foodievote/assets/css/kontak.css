@@ -1,0 +1,160 @@
+ :root {
+        --primary-brown: #2D1B16;
+        --secondary-brown: #5D2E17;
+        --accent-amber: #fbbf24;
+        --soft-cream: #fffaf5;
+    }
+
+    /* Membuat wrapper mengisi seluruh layar agar posisi card di tengah */
+    .contact-page {
+    min-height: 100vh;
+    display: flex;
+    /* Mengubah center menjadi flex-start agar posisi naik ke atas */
+    align-items: flex-start; 
+    justify-content: center;
+    background-color: #f8f5f2;
+    /* Mengurangi padding atas dari 80px ke 40px agar lebih naik */
+    padding: 40px 20px; 
+}
+
+.contact-card {
+    /* Menambah lebar maksimal dari 1100px ke 1350px atau 100% */
+    max-width: 1350px; 
+    width: 100%;
+    background: #ffffff;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(45, 27, 22, 0.12);
+    border: none;
+    /* Memberikan sedikit margin top agar tidak menempel sekali dengan navbar */
+    margin-top: 20px; 
+}
+
+    /* Header dengan Padding lebih luas */
+    .contact-header {
+        /* background: linear-gradient(135deg, var(--primary-brown) 0%, var(--secondary-brown) 100%); */
+        color: white;
+        padding: 60px 40px;
+        text-align: center;
+    }
+
+    .contact-header span {
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 0.85rem;
+        color: var(--accent-amber);
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .contact-header h1 {
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+    }
+
+    /* Info Section - Layout lebih lega */
+    .info-section {
+        background: var(--soft-cream);
+        padding: 50px 45px;
+        height: 100%;
+    }
+
+    .info-section h3 {
+        color: var(--primary-brown);
+        font-weight: 700;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .info-section h3::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: var(--accent-amber);
+    }
+
+    .info-item {
+        transition: transform 0.3s ease;
+    }
+
+    .info-item:hover {
+        transform: translateX(10px); /* Efek interaktif saat hover info */
+    }
+
+    .icon-box {
+        width: 45px;
+        height: 45px;
+        background: white;
+        color: var(--secondary-brown);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        font-size: 1.2rem;
+    }
+
+    /* Form Section - Clean & Modern */
+    .form-sections {
+        padding: 50px 45px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #4a3a35;
+        font-size: 0.9rem;
+    }
+
+    .form-control {
+        border: 2px solid #eee;
+        padding: 15px;
+        border-radius: 12px;
+        background-color: #f9f9f9;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        background-color: #fff;
+        border-color: var(--accent-amber);
+        box-shadow: 0 10px 20px rgba(251, 191, 36, 0.1);
+    }
+
+   .btn-submit {
+    background: var(--accent-amber);
+    color: var(--primary-brown) !important; /* Memastikan teks tetap cokelat tua */
+    font-weight: 700;
+    padding: 18px;
+    border-radius: 15px;
+    border: none;
+    width: 100%;
+    margin-top: 10px;
+    box-shadow: 0 10px 25px rgba(251, 191, 36, 0.3);
+    transition: all 0.3s ease; /* Agar transisi warna halus */
+}
+
+/* Tambahkan ini untuk mengontrol warna saat kursor menempel */
+.btn-submit:hover {
+    background-color: #f59e0b !important; /* Warna oranye yang sedikit lebih gelap */
+    color: var(--primary-brown) !important; /* Teks tetap cokelat tua agar kontras */
+    transform: translateY(-3px); /* Efek sedikit naik ke atas */
+    box-shadow: 0 15px 30px rgba(251, 191, 36, 0.4);
+}
+
+/* Menghilangkan efek biru/putih default saat tombol diklik */
+.btn-submit:active, .btn-submit:focus {
+    background-color: #d97706 !important;
+    color: var(--primary-brown) !important;
+    outline: none;
+    box-shadow: none;
+}
+
+    /* Responsivitas */
+    @media (max-width: 991px) {
+        .contact-page { padding: 40px 15px; }
+        .contact-header h1 { font-size: 2rem; }
+    }

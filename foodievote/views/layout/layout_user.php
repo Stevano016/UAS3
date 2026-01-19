@@ -11,25 +11,26 @@
 </head>
 <body>
     
-    <?php require_once __DIR__ .'/../partials/navbar_user.php'; ?>
+    <?php require_once __DIR__.'/../partials/navbar_user.php'; ?>
 
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-12">
-                <?php 
+                <?php
                 // This is where the actual page content will be included
                 if (isset($contentViewPath) && file_exists($contentViewPath)) {
                     require_once $contentViewPath;
                 } else {
                     // Fallback or error message if content view is not set or not found
-                    echo "<h1>Content Not Found</h1><p>The requested content could not be displayed.</p>";
+                    echo '<h1>Content Not Found</h1><p>The requested content could not be displayed.</p>';
                 }
-                ?>
+    ?>
             </div>
         </div>
     </div>
 
-    <?php require_once __DIR__ .'/../partials/footer.php'; ?>
+    <?php require_once __DIR__.'/../partials/footerUser.php'; ?>
+    <?php require_once __DIR__.'/../partials/modalLogout.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/alterhandler.js"></script>
