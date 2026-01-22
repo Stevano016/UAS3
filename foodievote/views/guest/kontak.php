@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/kontak.css">
 
+
 <div class="contact-page">
     <div class="contact-card">
         <div class="contact-header">

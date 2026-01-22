@@ -42,6 +42,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         }
         // --- End Handle Rating Submission ---
         ?>
+        <main>
         <div class="container mt-5">
         <div class="row">
         <div class="col-md-8">
@@ -173,6 +174,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 </p>
             </div>
         </div>
+        </main>
 <?php
     } else {
         echo '<div class="col-12"><p class="text-center">Makanan tidak ditemukan.</p></div>';

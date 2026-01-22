@@ -59,7 +59,7 @@
 
         <div class="text-center pt-3">
             <p class="mb-0 text-muted-footer small">
-                &copy; 2026 <span class="text-warning fw-bold">FoodieVote</span>. Semua hak dilindungi. Crafted with ❤️ for Food Lovers.
+                &copy; 2026 <span class="text-warning fw-bold">FoodieVote</span>. Semua hak dilindungi. Crafted with Kick for Food Lovers.
             </p>
         </div>
     </div>

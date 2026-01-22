@@ -1,5 +1,5 @@
 <?php
-require_once '../modules/restaurants/restaurant.model.php';                    
+require_once '../modules/restaurants/restaurant.model.php';
 $restaurantModel = new RestaurantModel();
 
 if (isset($_GET['search']) && !empty($_GET['search'])) {
@@ -9,7 +9,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     $restaurants = $restaurantModel->getAllRestaurants();
 }
 ?>
-<div class="container mt-5">
+<div class="container mt-5" style="max-width: 1200px">
         <div class="row">
 <h1>Daftar Restoran</h1>
 
@@ -31,10 +31,10 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
         foreach ($restaurants as $restaurant) {
             $avgRating = $restaurant['avg_rating'] ? round($restaurant['avg_rating'], 1) : 0;
             $totalRatings = $restaurant['total_ratings'] ?? 0;
-            
+
             echo '<div class="col-md-4 mb-4">';
             echo '<div class="card h-100">';
-            
+
             if ($restaurant['image_url']) {
                 // Check if image_url is a relative path and prepend BASE_URL if needed
                 $imageSrc = $restaurant['image_url'];
@@ -42,30 +42,30 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                     // If it doesn't start with http, treat as relative path
                     if (strpos($restaurant['image_url'], '/') === 0) {
                         // If it starts with '/', it's relative to root
-                        $imageSrc = BASE_URL . $restaurant['image_url'];
+                        $imageSrc = BASE_URL.$restaurant['image_url'];
                     } else {
                         // If it doesn't start with '/', prepend BASE_URL
-                        $imageSrc = BASE_URL . '/' . $restaurant['image_url'];
+                        $imageSrc = BASE_URL.'/'.$restaurant['image_url'];
                     }
                 }
-                echo '<img src="' . $imageSrc . '" class="card-img-top" alt="' . htmlspecialchars($restaurant['name']) . '" style="height: 200px; object-fit: cover;">';
+                echo '<img src="'.$imageSrc.'" class="card-img-top" alt="'.htmlspecialchars($restaurant['name']).'" style="height: 200px; object-fit: cover;">';
             }
-            
+
             echo '<div class="card-body">';
-            echo '<h5 class="card-title">' . htmlspecialchars($restaurant['name']) . '</h5>';
-            echo '<p class="card-text">' . htmlspecialchars(substr($restaurant['description'], 0, 100)) . '...</p>';
-            echo '<p class="card-text"><small class="text-muted">Alamat: ' . htmlspecialchars($restaurant['address']) . '</small></p>';
+            echo '<h5 class="card-title">'.htmlspecialchars($restaurant['name']).'</h5>';
+            echo '<p class="card-text">'.htmlspecialchars(substr($restaurant['description'], 0, 100)).'...</p>';
+            echo '<p class="card-text"><small class="text-muted">Alamat: '.htmlspecialchars($restaurant['address']).'</small></p>';
             echo '<div class="d-flex justify-content-between align-items-center">';
             echo '<div>';
-            echo '<span class="badge bg-warning text-dark">' . $avgRating . ' ★</span>';
-            echo '<small>(' . $totalRatings . ' rating)</small>';
+            echo '<span class="badge bg-warning text-dark">'.$avgRating.' ★</span>';
+            echo '<small>('.$totalRatings.' rating)</small>';
             echo '</div>';
-            echo '<a href="index.php?page=restaurant-detail&id=' . $restaurant['id'] . '" class="btn btn-primary">Lihat Detail</a>';
+            echo '<a href="index.php?page=restaurant-detail&id='.$restaurant['id'].'" class="btn btn-primary">Lihat Detail</a>';
             echo '</div>';
             echo '</div>';
             echo '</div>';
             echo '</div>';
         }
     }
-    ?>
+?>
 </div>

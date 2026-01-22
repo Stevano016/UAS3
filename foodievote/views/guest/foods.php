@@ -9,7 +9,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     $foods = $foodModel->getAllFoods();
 }
 ?>
-<div class="container mt-5">
+<div class="container mt-5" style="max-width: 1200px" >
         <div class="row">
 <h1>Daftar Makanan</h1>
 

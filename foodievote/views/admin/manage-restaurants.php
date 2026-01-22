@@ -178,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result['success']) {
             $_SESSION['message'] = $result['message'];
             $_SESSION['messageType'] = 'success';
-            echo "<scrip>window.location.href = 'index.php?page=manage-restaurants';</script>";
+            echo "<script>window.location.href = 'index.php?page=manage-restaurants';</script>";
             exit();
         } else {
             $message = $result['message'];

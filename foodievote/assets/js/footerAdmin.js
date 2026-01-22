@@ -1,17 +1,22 @@
- function updateClock() {
-        const now = new Date();
-        
-        // Ambil Jam dan Menit
-        let hours = now.getHours().toString().padStart(2, '0');
-        let minutes = now.getMinutes().toString().padStart(2, '0');
-        
-        // Tampilkan ke elemen dengan ID 'realtime-clock'
-        const timeString = `${hours}:${minutes}`;
-        document.getElementById('realtime-clock').textContent = timeString;
-    }
+function updateClock() {
+    const clockEl = document.getElementById('realtime-clock');
+    if (!clockEl) return; // pengaman wajib
 
-    // Jalankan fungsi setiap detik agar selalu update
-    setInterval(updateClock, 1000);
+    const now = new Date();
 
-    // Panggil fungsi sekali di awal agar tidak menunggu 1 detik saat refresh
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+    clockEl.textContent = `${hours}:${minutes}`;
+}
+
+// Panggil sekali saat load
+updateClock();
+
+// Update tiap detik
+setInterval(updateClock, 1000);
+
+document.addEventListener('DOMContentLoaded', () => {
     updateClock();
+    setInterval(updateClock, 1000);
+});

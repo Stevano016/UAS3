@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>404 - Nyasar Bang</title>
    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/error.css">
+   <link rel="icon" type="image/png" sizes="32x32" href="<?php echo BASE_URL; ?>/assets/images/foodievote-logo1.png">
 </head>
 <body>
 
